@@ -29,18 +29,21 @@ public class Man extends Entity{
 		balloon.setText(message);
 	}
 	
+        @Override
 	public void setAngle(float angle){
         super.setAngle(angle);
         if(balloon != null)
         	balloon.setAngle(angle);
     }
 
+        @Override
 	public void setX(float x) {
         this.x = x;
         if(balloon != null)
         	balloon.setX(x+kX);
     }
 
+        @Override
     public void setY(float y) {
         this.y = y;
         if(balloon != null)

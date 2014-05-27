@@ -36,7 +36,7 @@ public class Game extends BaseState {
         Font f = null;
         try {
             f = Font.createFont(Font.TRUETYPE_FONT, new File("../Fonts/8p.TTF")).deriveFont(16f);
-        } catch (Exception e) {
+        } catch (FontFormatException | IOException e) {
             System.err.println("System font cannot be loaded. Using default.");
         }
         terminal = new TextBox(30, 30, 200, 100, f) {

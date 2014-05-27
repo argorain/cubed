@@ -35,9 +35,9 @@ public class Main extends GameContainer {
         main.setFPS(30);
 
         //main.addState(new Splash(0));
-        //main.addState(new TestWorld(2));
+        main.addState(new TestWorld(2));
         //main.addState(new Designer(1));
-        main.addState(new Game(10));
+        //main.addState(new Game(10));
 
         main.start();
     }
