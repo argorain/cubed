@@ -4,6 +4,7 @@ import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Point;
+import java.awt.event.KeyEvent;
 import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
@@ -27,7 +28,7 @@ public class SpaceShip extends SREObject {
     String shipName = "";
     String className = "";
     private static final int BLOCKSIZE = 32;
-    SortedList<Entity> entities = new SortedList<>();
+    SortedList<Man> men = new SortedList<>();
     private float velocityX;
     private float velocityY;
     boolean clickedLMB = false;
@@ -40,10 +41,10 @@ public class SpaceShip extends SREObject {
         super(x, y);
     }
 
-    public void join(Entity entity) {
+    public void join(Man entity) {
         entity.setX(0);
         entity.setY(0);
-        entities.add(entity);
+        men.add(entity);
     }
 
     public void add(int relX, int relY, Block block) {
@@ -208,10 +209,15 @@ public class SpaceShip extends SREObject {
             Block block = blocks.get(i);
             if (block != null && !block.hidden()) {
                 shipGraph.drawImage(block.getImage(), block.getRelX() * BLOCKSIZE, block.getRelY() * BLOCKSIZE, null);
-
+                
             }
         }
-
+        
+        /**testing **/
+        if(!men.get(0).hidden())
+            shipGraph.drawImage(men.get(0).getImage(), men.get(0).relX*BLOCKSIZE,men.get(0).relY*BLOCKSIZE-8, null);
+        /** over */
+        
         float moveX = 0;
         float moveY = 0;
 
@@ -228,14 +234,15 @@ public class SpaceShip extends SREObject {
 
         for (int i = 0; i < blocks.size(); i++) {
             Block block = blocks.get(i);
+            block.draw(g, gc);
             //for show hitbox
 //                g.setColor(Color.yellow);
 //                block.getHitBox().draw(g, gc);
         }
 
-        for (int i = 0; i < entities.size(); i++) {
+        /*for (int i = 0; i < entities.size(); i++) {
             entities.get(i).draw(g, gc);
-        }
+        }*/
     }
 
     @Override
@@ -243,8 +250,10 @@ public class SpaceShip extends SREObject {
         float moveX = centerOfGravity.x;
         float moveY = centerOfGravity.y;
 
-
-
+        if(input.isKeyTyped(KeyEvent.VK_T)){
+            men.get(0).hideShow();
+        }
+        
         for (int k = 0; k < blocks.size(); k++) {
             Block block = blocks.get(k);
             if (block != null) {
@@ -272,10 +281,11 @@ public class SpaceShip extends SREObject {
         }
 
         if (freePos) { 
-            System.out.println(entities.get(0).getX()+":"+entities.get(0).getY()+" -> "+(px * BLOCKSIZE + x - moveX)+":"+(py * BLOCKSIZE + y - moveY - 8));
-            entities.get(0).setX(px * BLOCKSIZE + x - moveX);
-            entities.get(0).setY(py * BLOCKSIZE + y - moveY - 8);
-            //System.out.println(input.getPosX()+", "+input.getPosY());
+            /*System.out.println(men.get(0).getX()+":"+men.get(0).getY()+" -> "+(px * BLOCKSIZE + x - moveX)+":"+(py * BLOCKSIZE + y - moveY - 8));
+            men.get(0).setX(px * BLOCKSIZE + x - moveX);
+            men.get(0).setY(py * BLOCKSIZE + y - moveY - 8);*/
+            men.get(0).setRelPos(px, py);
+            System.out.println(px+", "+py);
             freePos = false;
         }
         if (velocityX != 0 || velocityY != 0) {

@@ -44,7 +44,7 @@ public class TestWorld extends BaseState {
         //sprite.setBallonMessage("Hello world. I am your new avatar in this funky world.");
         ship.fill("GrTest.ship", shipSer, grSer, cfgSer);
         add(ship);
-        add(sprite);
+        //add(sprite);
 //                ship.setCamera(camera);
         ship.join(sprite);
         ship.setHitBoxVisible(false);
