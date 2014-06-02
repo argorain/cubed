@@ -323,19 +323,19 @@ public class SpaceShip extends SREObject {
 
         if (!men.get(0).onSpot()&&!men.get(0).isMoving()) {
             int kx = men.get(0).relX, ky = men.get(0).relY, tx = men.get(0).trelX, ty = men.get(0).trelY, ktx = kx, kty = ky;
-            if (Math.abs(kx - tx) > Math.abs(ky - ty)) {
+            //if (Math.abs(kx - tx) > Math.abs(ky - ty)) {
                 if (kx > tx) {
                     ktx = kx - 1;
                 } else if (kx < tx) {
                     ktx = kx + 1;
                 }
-            } else {
-                if (ky > ty) {
+            //} else {
+                else if (ky > ty) {
                     kty = ky - 1;
                 } else if (ky < ty) {
                     kty = ky + 1;
                 }
-            }
+           // }
             boolean out=false;
             for (int variant = -1; variant < 4; variant++) {
                 for (int k = 0; k < blocks.size(); k++) {
@@ -384,6 +384,8 @@ public class SpaceShip extends SREObject {
                         }
                         break;
                     default:
+                        kty=ky;
+                        ktx=kx;
                         break;
                             
                 }

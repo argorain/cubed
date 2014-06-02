@@ -18,7 +18,7 @@ public class Man extends Entity {
     boolean moving = false;
     int step = 0;
     int dx = 0, dy = 0, rdx = 0, rdy = 0;
-    final int dv = 3;
+    final int dv = 4;
     private int BLOCKSIZE;
     private boolean inverted=false;
 
@@ -115,7 +115,7 @@ public class Man extends Entity {
             rdx--;
             lookLeft();
         }
-        if (mrelY * BLOCKSIZE > getY()) {
+        else if (mrelY * BLOCKSIZE > getY()) {
             dy = dv;
             rdy++;
         } else if (mrelY * BLOCKSIZE < getY()) {
