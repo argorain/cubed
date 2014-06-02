@@ -40,6 +40,7 @@ public class TestWorld extends BaseState {
         cameraOn(null, 80000, 80000);
         //Balloon bal = new Balloon(0, 0, "balloon_01.png", grSer);
         sprite.setInfo("Rain", "Human", "21");
+        //sprite.setPeriod(300);
         //sprite.setBalloon(bal);
         //sprite.setBallonMessage("Hello world. I am your new avatar in this funky world.");
         ship.fill("GrTest.ship", shipSer, grSer, cfgSer);
@@ -56,7 +57,6 @@ public class TestWorld extends BaseState {
 
         //add(9, sprite);
         //add(100, bal);
-
     }
 
     @Override

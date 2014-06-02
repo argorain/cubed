@@ -9,7 +9,7 @@ import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
-import srengine.Camera;
+import java.util.ArrayList;
 
 import srengine.Entity;
 import srengine.GameContainer;
@@ -36,14 +36,18 @@ public class SpaceShip extends SREObject {
     boolean freePos = false;
     private float momentOfForce = 1f; //tocivy moment ... vypocita se podle umisteni motoru
     private float acceleration = 0;
+    ArrayList<ArrayList<Integer>> rooms = new ArrayList<>();
 
     public SpaceShip(float x, float y) {
         super(x, y);
     }
 
     public void join(Man entity) {
-        entity.setX(0);
-        entity.setY(0);
+        entity.setBlocksize(BLOCKSIZE);
+        entity.setRelPos(1, 1);
+        entity.setTargetRelPos(1, 1);
+        /* entity.setX(0);
+         entity.setY(0);*/
         men.add(entity);
     }
 
@@ -174,6 +178,14 @@ public class SpaceShip extends SREObject {
             }
         }
         countGravity();
+
+
+        for (int k = 0; k < blocks.size(); k++) {
+            block = blocks.get(k);
+            if (block.getLayer() <= 1 && !block.isCargoOnSpot()) {
+            }
+        }
+
         return true;
     }
 
@@ -209,15 +221,19 @@ public class SpaceShip extends SREObject {
             Block block = blocks.get(i);
             if (block != null && !block.hidden()) {
                 shipGraph.drawImage(block.getImage(), block.getRelX() * BLOCKSIZE, block.getRelY() * BLOCKSIZE, null);
-                
+
             }
         }
-        
-        /**testing **/
-        if(!men.get(0).hidden())
-            shipGraph.drawImage(men.get(0).getImage(), men.get(0).relX*BLOCKSIZE,men.get(0).relY*BLOCKSIZE-8, null);
-        /** over */
-        
+
+        /**
+         * testing *
+         */
+        if (!men.get(0).hidden()) {
+            shipGraph.drawImage(men.get(0).getImage(), (int)men.get(0).getX(), (int)men.get(0).getY() - 8, null);
+        }
+        /**
+         * over
+         */
         float moveX = 0;
         float moveY = 0;
 
@@ -241,8 +257,8 @@ public class SpaceShip extends SREObject {
         }
 
         /*for (int i = 0; i < entities.size(); i++) {
-            entities.get(i).draw(g, gc);
-        }*/
+         entities.get(i).draw(g, gc);
+         }*/
     }
 
     @Override
@@ -250,10 +266,10 @@ public class SpaceShip extends SREObject {
         float moveX = centerOfGravity.x;
         float moveY = centerOfGravity.y;
 
-        if(input.isKeyTyped(KeyEvent.VK_T)){
+        if (input.isKeyTyped(KeyEvent.VK_T)) {
             men.get(0).hideShow();
         }
-        
+
         for (int k = 0; k < blocks.size(); k++) {
             Block block = blocks.get(k);
             if (block != null) {
@@ -270,8 +286,17 @@ public class SpaceShip extends SREObject {
                     py = block.getRelY();
                     if (block.getLayer() <= 1 && !block.isCargoOnSpot()) {
                         freePos = true;
+
                     }
                 }
+
+                ////
+                if (block.getRelX() == men.get(0).relX && block.getRelY() == men.get(0).relY) {
+                    block.colorUp(new Color(0, 255, 0, 50));
+                } else {
+                    block.uncolor();
+                }
+                ////
                 block.update(input, gc);
             }
         }
@@ -280,12 +305,13 @@ public class SpaceShip extends SREObject {
             accelerate(acceleration);
         }
 
-        if (freePos) { 
+        if (freePos) {
             /*System.out.println(men.get(0).getX()+":"+men.get(0).getY()+" -> "+(px * BLOCKSIZE + x - moveX)+":"+(py * BLOCKSIZE + y - moveY - 8));
-            men.get(0).setX(px * BLOCKSIZE + x - moveX);
-            men.get(0).setY(py * BLOCKSIZE + y - moveY - 8);*/
-            men.get(0).setRelPos(px, py);
-            System.out.println(px+", "+py);
+             men.get(0).setX(px * BLOCKSIZE + x - moveX);
+             men.get(0).setY(py * BLOCKSIZE + y - moveY - 8);*/
+            men.get(0).setTargetRelPos(px, py);
+
+            System.out.println(px + ", " + py);
             freePos = false;
         }
         if (velocityX != 0 || velocityY != 0) {
@@ -294,6 +320,79 @@ public class SpaceShip extends SREObject {
             this.setY((float) (this.getY() - Math.cos(angle) * velocityX + Math.sin(angle) * velocityY));
         }
 
+
+        if (!men.get(0).onSpot()&&!men.get(0).isMoving()) {
+            int kx = men.get(0).relX, ky = men.get(0).relY, tx = men.get(0).trelX, ty = men.get(0).trelY, ktx = kx, kty = ky;
+            if (Math.abs(kx - tx) > Math.abs(ky - ty)) {
+                if (kx > tx) {
+                    ktx = kx - 1;
+                } else if (kx < tx) {
+                    ktx = kx + 1;
+                }
+            } else {
+                if (ky > ty) {
+                    kty = ky - 1;
+                } else if (ky < ty) {
+                    kty = ky + 1;
+                }
+            }
+            boolean out=false;
+            for (int variant = -1; variant < 4; variant++) {
+                for (int k = 0; k < blocks.size(); k++) {
+                    if (ktx == blocks.get(k).getRelX() && kty == blocks.get(k).getRelY()) {
+                        if (blocks.get(k).getLayer() <= 1 && !blocks.get(k).isCargoOnSpot()) {
+                            men.get(0).setRelPosToMove(ktx, kty);
+                            men.get(0).moveTo();
+                            out=true;
+                            break;
+                        }
+                    }
+                }
+                if(out)
+                    break;
+                switch (variant) {
+                    case 0:
+                        if (ktx != kx) {
+                            kty++;
+                        }
+                        if (kty != ky) {
+                            ktx++;
+                        }
+                        break;
+                    case 1:
+                        if (ktx != kx) {
+                            kty--;
+                        }
+                        if (kty != ky) {
+                            ktx--;
+                        }
+                        break;
+                    case 2:
+                        if (ktx != kx) {
+                            kty--;
+                        }
+                        if (kty != ky) {
+                            ktx--;
+                        }
+                        break;
+                    case 3:
+                        if (ktx != kx) {
+                            kty++;
+                        }
+                        if (kty != ky) {
+                            ktx++;
+                        }
+                        break;
+                    default:
+                        break;
+                            
+                }
+
+            }
+        }
+
+        /*camera.move(velocityX, velocityY);
+         System.out.println(velocityX+" "+velocityY);*/
     }
 
     public void blockAction(float x, float y, int actionSource) {

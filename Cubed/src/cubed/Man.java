@@ -1,5 +1,7 @@
 package cubed;
 
+import java.util.Timer;
+import java.util.TimerTask;
 import srengine.Entity;
 import srengine.utils.Serialiser;
 
@@ -12,8 +14,13 @@ public class Man extends Entity{
 	String health="100%";
 	private static final int kX = 30;
 	private static final int kY = -85;
-	int relX, relY;
+	int relX, relY, trelX, trelY, mrelX, mrelY;
 	boolean moving = false;
+        int step=0;
+        int dx=0,dy=0,rdx=0,rdy=0;
+        final int dv=3;
+        
+    private int BLOCKSIZE;
 	
 	public Man(float x, float y, String[] images, Serialiser s) {
 		super(x, y, images, s);
@@ -59,6 +66,8 @@ public class Man extends Entity{
     public void setRelPos(int x, int y){
     	relX= x;
     	relY= y;
+        setX(x*BLOCKSIZE);
+        setY(y*BLOCKSIZE);
     }
     
     public int relX(){
@@ -75,5 +84,65 @@ public class Man extends Entity{
     
     public boolean isMoving(){
     	return moving;
+    }
+
+    void setTargetRelPos(int px, int py) {
+        trelX=px;
+        trelY=py;
+    }
+    
+    boolean onSpot(){
+        return (relX==trelX&&relY==trelY);
+    }
+
+    void moveTo() {
+        this.run();
+        Timer run = new Timer();
+        moving=true;
+        step=0;
+        
+        dx=dy=rdx=rdy=0;
+        
+        if(mrelX*BLOCKSIZE>getX()){
+            dx=dv;
+            rdx++;
+        }else if(mrelX*BLOCKSIZE<getX()){
+            dx=-dv;
+            rdx--;
+        }
+        if(mrelY*BLOCKSIZE>getY()){
+            dy=dv;
+            rdy++;
+        }else if(mrelY*BLOCKSIZE<getY()){
+            dy=-dv;
+            rdy--;
+        }
+        run.scheduleAtFixedRate(new TimerTask() {
+            
+            @Override
+            public void run() {
+                               
+                setX(getX()+dx);
+                setY(getY()+dy);
+                if(step%2==0)
+                    redraw();
+                if(step<(int)(BLOCKSIZE/dv))
+                    step++;
+                else{
+                    moving=false;
+                    setRelPos(relX+rdx, relY+rdy);
+                    super.cancel();
+                }
+            }
+        }, 0, 100);
+    }
+
+    void setRelPosToMove(int ktx, int kty) {
+        mrelX=ktx;
+        mrelY=kty;
+    }
+
+    void setBlocksize(int BLOCKSIZE) {
+        this.BLOCKSIZE=BLOCKSIZE;
     }
 }
