@@ -337,7 +337,7 @@ public class SpaceShip extends SREObject {
                 }
            // }
             boolean out=false;
-            for (int variant = -1; variant < 4; variant++) {
+            for (int variant = -1; variant < 7; variant++) {
                 for (int k = 0; k < blocks.size(); k++) {
                     if (ktx == blocks.get(k).getRelX() && kty == blocks.get(k).getRelY()) {
                         if (blocks.get(k).getLayer() <= 1 && !blocks.get(k).isCargoOnSpot()) {
@@ -359,14 +359,6 @@ public class SpaceShip extends SREObject {
                             ktx++;
                         }
                         break;
-                    case 1:
-                        if (ktx != kx) {
-                            kty--;
-                        }
-                        if (kty != ky) {
-                            ktx--;
-                        }
-                        break;
                     case 2:
                         if (ktx != kx) {
                             kty--;
@@ -375,12 +367,20 @@ public class SpaceShip extends SREObject {
                             ktx--;
                         }
                         break;
-                    case 3:
+                    case 4:
                         if (ktx != kx) {
-                            kty++;
+                            ktx--;
                         }
                         if (kty != ky) {
+                            kty--;
+                        }
+                        break;
+                    case 6:
+                        if (ktx != kx) {
                             ktx++;
+                        }
+                        if (kty != ky) {
+                            kty++;
                         }
                         break;
                     default:
