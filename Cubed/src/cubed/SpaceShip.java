@@ -229,8 +229,11 @@ public class SpaceShip extends SREObject {
          * testing *
          */
         if (!men.get(0).hidden()) {
-            shipGraph.drawImage(men.get(0).getImage(), (int)men.get(0).getX(), (int)men.get(0).getY() - 8, null);
+            shipGraph.drawImage(men.get(0).getImage(), (int) men.get(0).getX(), (int) men.get(0).getY() - 8, null);
         }
+
+        shipGraph.setColor(Color.red);
+        shipGraph.drawLine(men.get(0).trelX * BLOCKSIZE + BLOCKSIZE / 2, men.get(0).trelY * BLOCKSIZE + BLOCKSIZE / 2, men.get(0).relX * BLOCKSIZE + BLOCKSIZE / 2, men.get(0).relY * BLOCKSIZE + BLOCKSIZE / 2);
         /**
          * over
          */
@@ -291,11 +294,11 @@ public class SpaceShip extends SREObject {
                 }
 
                 ////
-                if (block.getRelX() == men.get(0).relX && block.getRelY() == men.get(0).relY) {
-                    block.colorUp(new Color(0, 255, 0, 50));
-                } else {
-                    block.uncolor();
-                }
+                /*if (block.getRelX() == men.get(0).relX && block.getRelY() == men.get(0).relY) {
+                 block.colorUp(new Color(0, 255, 0, 50));
+                 } else {
+                 block.uncolor();
+                 }*/
                 ////
                 block.update(input, gc);
             }
@@ -313,6 +316,11 @@ public class SpaceShip extends SREObject {
 
             System.out.println(px + ", " + py);
             freePos = false;
+
+            for (int i = 0; i < blocks.size(); i++) {
+                blocks.get(i).uncolor();
+            }
+
         }
         if (velocityX != 0 || velocityY != 0) {
             this.rotate(velocityX * momentOfForce / 1000);
@@ -320,74 +328,77 @@ public class SpaceShip extends SREObject {
             this.setY((float) (this.getY() - Math.cos(angle) * velocityX + Math.sin(angle) * velocityY));
         }
 
-
-        if (!men.get(0).onSpot()&&!men.get(0).isMoving()) {
+        if (!men.get(0).onSpot() && !men.get(0).isMoving()) {
             int kx = men.get(0).relX, ky = men.get(0).relY, tx = men.get(0).trelX, ty = men.get(0).trelY, ktx = kx, kty = ky;
             //if (Math.abs(kx - tx) > Math.abs(ky - ty)) {
-                if (kx > tx) {
-                    ktx = kx - 1;
-                } else if (kx < tx) {
-                    ktx = kx + 1;
-                }
-            //} else {
-                else if (ky > ty) {
-                    kty = ky - 1;
-                } else if (ky < ty) {
-                    kty = ky + 1;
-                }
-           // }
-            boolean out=false;
-            for (int variant = -1; variant < 7; variant++) {
+            if (kx > tx) {
+                ktx = kx - 1;
+            } else if (kx < tx) {
+                ktx = kx + 1;
+            } //} else {
+            else if (ky > ty) {
+                kty = ky - 1;
+            } else if (ky < ty) {
+                kty = ky + 1;
+            }
+            // }
+            boolean out = false;
+            for (int variant = 0; variant < 4; variant++) {
                 for (int k = 0; k < blocks.size(); k++) {
                     if (ktx == blocks.get(k).getRelX() && kty == blocks.get(k).getRelY()) {
                         if (blocks.get(k).getLayer() <= 1 && !blocks.get(k).isCargoOnSpot()) {
+                            blocks.get(k).colorUp(new Color(0, 255, 0, 60));
                             men.get(0).setRelPosToMove(ktx, kty);
                             men.get(0).moveTo();
-                            out=true;
+                            out = true;
+                            break;
+                        }else{
+                            blocks.get(k).colorUp(new Color(0, 255, 255, 60));
                             break;
                         }
                     }
                 }
-                if(out)
+                if (out) {
                     break;
+                }
                 switch (variant) {
                     case 0:
                         if (ktx != kx) {
                             kty++;
-                        }
-                        if (kty != ky) {
+                            ktx--;
+                        }else if (kty != ky) {
                             ktx++;
+                            kty--;
+                        }
+                        break;
+                    case 1:
+                        if (ktx != kx) {
+                            kty -= 2;
+                        }else if (kty != ky) {
+                            ktx -= 2;
                         }
                         break;
                     case 2:
                         if (ktx != kx) {
-                            kty--;
-                        }
-                        if (kty != ky) {
-                            ktx--;
-                        }
-                        break;
-                    case 4:
-                        if (ktx != kx) {
-                            ktx--;
-                        }
-                        if (kty != ky) {
-                            kty--;
-                        }
-                        break;
-                    case 6:
-                        if (ktx != kx) {
-                            ktx++;
-                        }
-                        if (kty != ky) {
                             kty++;
+                            ktx--;
+                        }else if (kty != ky) {
+                            ktx++;
+                            kty--;
+                        }
+                        break;
+                    case 3:
+                        if (ktx != kx) {
+                            ktx += 2;
+                        }else if (kty != ky) {
+                            kty += 2;
                         }
                         break;
                     default:
-                        kty=ky;
-                        ktx=kx;
+                        kty = ky;
+                        ktx = kx;
                         break;
-                            
+
                 }
 
             }
