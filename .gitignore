@@ -6,6 +6,7 @@
 # Package Files #
 *.war
 *.ear
+*.jar
 
 # virtual machine crash logs, see http://www.java.com/en/download/help/error_hotspot.xml
 hs_err_pid*
@@ -14,3 +15,9 @@ hs_err_pid*
 /Cubed/dist/
 /UniCube/nbproject/private/
 /UniCube/build/
+/Cubed/build.xml
+/UniCube/build.xml
+/Cubed/manifest.mf
+/UniCube/manifest.mf
+/Cubed/nbproject/
+/UniCube/nbproject/
