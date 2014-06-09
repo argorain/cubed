@@ -345,15 +345,19 @@ public class SpaceShip extends SREObject {
             boolean out = false;
             for (int variant = 0; variant < 4; variant++) {
                 for (int k = 0; k < blocks.size(); k++) {
-                    if (ktx == blocks.get(k).getRelX() && kty == blocks.get(k).getRelY()) {
-                        if (blocks.get(k).getLayer() <= 1 && !blocks.get(k).isCargoOnSpot()) {
-                            blocks.get(k).colorUp(new Color(0, 255, 0, 60));
+                    Block block = blocks.get(k);
+                    if (ktx == block.getRelX() && kty == block.getRelY()) {
+                        if(block.isDoors()){
+                            block.openDoor();
+                        }
+                        if (block.getLayer() <= 1 && !block.isCargoOnSpot()) {
+                            block.colorUp(new Color(0, 255, 0, 60));
                             men.get(0).setRelPosToMove(ktx, kty);
                             men.get(0).moveTo();
                             out = true;
                             break;
                         } else {
-                            blocks.get(k).colorUp(new Color(0, 255, 255, 60));
+                            block.colorUp(new Color(0, 255, 255, 60));
                             break;
                         }
                     }

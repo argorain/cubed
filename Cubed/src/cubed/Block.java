@@ -202,15 +202,13 @@ public class Block extends Entity {
                     clickedLMB = true;
                     switch (state) {
                         case "doors":
-                            redraw();
-                            hitboxAllowed = !hitboxAllowed;
+                            openDoor();
                             System.out.println("door action");
-                            layer=hitboxAllowed?10:0;
                             break;
                         default:
                             break;
                     }
-                   // colorUp(new Color(0, 255, 0, 70));
+                    // colorUp(new Color(0, 255, 0, 70));
                     break;
                 case MouseEvent.BUTTON2:
                     System.out.println("RMB");
@@ -237,15 +235,15 @@ public class Block extends Entity {
         }
     }
 
-    public void colorUp(Color color){
-        this.color=color;
-        colored=true;
+    public void colorUp(Color color) {
+        this.color = color;
+        colored = true;
     }
-    
-    public void uncolor(){
-        colored=false;
+
+    public void uncolor() {
+        colored = false;
     }
-    
+
     @Override
     public void update(InputManager input, GameContainer gc) {
         super.update(input, gc);
@@ -269,9 +267,19 @@ public class Block extends Entity {
                 this.damageBlock.draw(g, gc);
             }
         }
-        if(colored){
+        if (colored) {
             g.setColor(color);
-            g.fillRect((int)super.x, (int)super.y, 32, 32);
+            g.fillRect((int) super.x, (int) super.y, 32, 32);
         }
+    }
+
+    boolean isDoors() {
+        return state.equals("doors");
+    }
+
+    void openDoor() {
+        redraw();
+        hitboxAllowed = !hitboxAllowed;
+        layer = hitboxAllowed ? 10 : 0;
     }
 }
