@@ -23,6 +23,7 @@ public class Block extends Entity {
     private boolean hitboxAllowed = false;
     private boolean clickedLMB = false;
     private boolean cargoOnSpot = false;
+    private boolean menOnSpot = false;
     private boolean engine = false;
     private boolean blast = false;
     private String name;
@@ -297,5 +298,17 @@ public class Block extends Entity {
     
     void unlockDoor(){
         locked=false;
+    }
+
+    boolean isMenOnSpot() {
+        return menOnSpot;
+    }
+
+    void menOnSpot() {
+        menOnSpot=true;
+    }
+
+    void menLeftSpot() {
+        menOnSpot=false;
     }
 }

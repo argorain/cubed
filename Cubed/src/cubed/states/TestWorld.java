@@ -22,6 +22,7 @@ public class TestWorld extends BaseState {
     Serialiser shipSer = new Serialiser("../ships.dat");
     Serialiser cfgSer = new Serialiser("../conf.dat");
     Man sprite = new Man(100, 100, new String[]{"Rain_01_a.png", "Rain_01_b.png"}, grSer);
+    Man sit = new Man(100, 100, new String[]{"Sit_01_a.png", "Sit_01_b.png"}, grSer);
     Entity dmg1 = new Entity(200, 232, new String[]{"damage_01_a.png",
         "damage_01_b.png", "damage_01_c.png", "damage_01_d.png"}, grSer);
     Entity dmg2 = new Entity(264, 264, new String[]{"damage_02_a.png",
@@ -40,6 +41,7 @@ public class TestWorld extends BaseState {
         cameraOn(null, 80000, 80000);
         //Balloon bal = new Balloon(0, 0, "balloon_01.png", grSer);
         sprite.setInfo("Rain", "Human", "21");
+        sit.setInfo("Jara", "human", "20");
         //sprite.setPeriod(300);
         //sprite.setBalloon(bal);
         //sprite.setBallonMessage("Hello world. I am your new avatar in this funky world.");
@@ -48,6 +50,7 @@ public class TestWorld extends BaseState {
         //add(sprite);
 //                ship.setCamera(camera);
         ship.join(sprite);
+        ship.join(sit);
         ship.setHitBoxVisible(false);
 //		add(ship);
         //add(block);

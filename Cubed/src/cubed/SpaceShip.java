@@ -44,11 +44,18 @@ public class SpaceShip extends SREObject {
 
     public void join(Man entity) {
         entity.setBlocksize(BLOCKSIZE);
-        entity.setRelPos(1, 1);
-        entity.setTargetRelPos(1, 1);
-        /* entity.setX(0);
-         entity.setY(0);*/
-        men.add(entity);
+        for (int i = 0; i < blocks.size(); i++) {
+            if (blocks.get(i).getLayer() <= 1 && !blocks.get(i).isCargoOnSpot() && !blocks.get(i).isMenOnSpot()) {
+                entity.setRelPos(blocks.get(i).getRelX(), blocks.get(i).getRelY());
+                entity.setTargetRelPos(blocks.get(i).getRelX(), blocks.get(i).getRelY());
+                blocks.get(i).menOnSpot();
+                /* entity.setX(0);
+                 entity.setY(0);*/
+                men.add(entity);
+                break;
+            }
+        }
+
     }
 
     public void add(int relX, int relY, Block block) {
@@ -228,12 +235,14 @@ public class SpaceShip extends SREObject {
         /**
          * testing *
          */
-        if (!men.get(0).hidden()) {
-            shipGraph.drawImage(men.get(0).getImage(), (int) men.get(0).getX(), (int) men.get(0).getY() - 8, null);
-        }
+        for (int i = 0; i < men.size(); i++) {
+            if (!men.get(i).hidden()) {
+                shipGraph.drawImage(men.get(i).getImage(), (int) men.get(i).getX(), (int) men.get(i).getY() - 8, null);
+            }
 
-        shipGraph.setColor(Color.red);
-        shipGraph.drawLine(men.get(0).trelX * BLOCKSIZE + BLOCKSIZE / 2, men.get(0).trelY * BLOCKSIZE + BLOCKSIZE / 2, men.get(0).relX * BLOCKSIZE + BLOCKSIZE / 2, men.get(0).relY * BLOCKSIZE + BLOCKSIZE / 2);
+            shipGraph.setColor(Color.red);
+            shipGraph.drawLine(men.get(i).trelX * BLOCKSIZE + BLOCKSIZE / 2, men.get(i).trelY * BLOCKSIZE + BLOCKSIZE / 2, men.get(i).relX * BLOCKSIZE + BLOCKSIZE / 2, men.get(i).relY * BLOCKSIZE + BLOCKSIZE / 2);
+        }
         /**
          * over
          */
@@ -269,10 +278,6 @@ public class SpaceShip extends SREObject {
         float moveX = centerOfGravity.x;
         float moveY = centerOfGravity.y;
 
-        if (input.isKeyTyped(KeyEvent.VK_T)) {
-            men.get(0).hideShow();
-        }
-
         for (int k = 0; k < blocks.size(); k++) {
             Block block = blocks.get(k);
             if (block != null) {
@@ -287,14 +292,14 @@ public class SpaceShip extends SREObject {
                     clickedLMB = true;
                     px = block.getRelX();
                     py = block.getRelY();
-                    if (block.getLayer() <= 1 && !block.isCargoOnSpot()) {
+                    if (block.getLayer() <= 1 && !block.isCargoOnSpot() && !block.isMenOnSpot() ) {
                         freePos = true;
 
                     }
                 }
 
                 ////
-                /*if (block.getRelX() == men.get(0).relX && block.getRelY() == men.get(0).relY) {
+                /*if (block.getRelX() == men.get(mi).relX && block.getRelY() == men.get(mi).relY) {
                  block.colorUp(new Color(0, 255, 0, 50));
                  } else {
                  block.uncolor();
@@ -309,9 +314,9 @@ public class SpaceShip extends SREObject {
         }
 
         if (freePos) {
-            /*System.out.println(men.get(0).getX()+":"+men.get(0).getY()+" -> "+(px * BLOCKSIZE + x - moveX)+":"+(py * BLOCKSIZE + y - moveY - 8));
-             men.get(0).setX(px * BLOCKSIZE + x - moveX);
-             men.get(0).setY(py * BLOCKSIZE + y - moveY - 8);*/
+            /*System.out.println(men.get(mi).getX()+":"+men.get(mi).getY()+" -> "+(px * BLOCKSIZE + x - moveX)+":"+(py * BLOCKSIZE + y - moveY - 8));
+             men.get(mi).setX(px * BLOCKSIZE + x - moveX);
+             men.get(mi).setY(py * BLOCKSIZE + y - moveY - 8);*/
             men.get(0).setTargetRelPos(px, py);
 
             System.out.println(px + ", " + py);
@@ -328,90 +333,100 @@ public class SpaceShip extends SREObject {
             this.setY((float) (this.getY() - Math.cos(angle) * velocityX + Math.sin(angle) * velocityY));
         }
 
-        if (!men.get(0).onSpot() && !men.get(0).isMoving()) {
-            int kx = men.get(0).relX, ky = men.get(0).relY, tx = men.get(0).trelX, ty = men.get(0).trelY, ktx = kx, kty = ky;
-            //if (Math.abs(kx - tx) > Math.abs(ky - ty)) {
-            if (dC(kx, tx) < 0) {
-                ktx = kx - 1;
-            } else if (dC(kx, tx) > 0) {
-                ktx = kx + 1;
-            } //} else {
-            else if (dC(ky, ty) < 0) {
-                kty = ky - 1;
-            } else if (dC(ky, ty) > 0) {
-                kty = ky + 1;
-            }
-            // }
-            boolean out = false;
-            for (int variant = 0; variant < 4; variant++) {
-                for (int k = 0; k < blocks.size(); k++) {
-                    Block block = blocks.get(k);
-                    if (ktx == block.getRelX() && kty == block.getRelY()) {
-                        if(block.isDoors()){
-                            block.openDoor();
-                        }
-                        if (block.getLayer() <= 1 && !block.isCargoOnSpot()) {
-                            block.colorUp(new Color(0, 255, 0, 60));
-                            men.get(0).setRelPosToMove(ktx, kty);
-                            men.get(0).moveTo();
-                            out = true;
-                            break;
-                        } else {
-                            block.colorUp(new Color(0, 255, 255, 60));
-                            break;
+        for (int mi = 0; mi < men.size(); mi++) {
+            if (!men.get(mi).onSpot() && !men.get(mi).isMoving()) {
+                int kx = men.get(mi).relX, ky = men.get(mi).relY, tx = men.get(mi).trelX, ty = men.get(mi).trelY, ktx = kx, kty = ky;
+                //if (Math.abs(kx - tx) > Math.abs(ky - ty)) {
+                if (dC(kx, tx) < 0) {
+                    ktx = kx - 1;
+                } else if (dC(kx, tx) > 0) {
+                    ktx = kx + 1;
+                } //} else {
+                else if (dC(ky, ty) < 0) {
+                    kty = ky - 1;
+                } else if (dC(ky, ty) > 0) {
+                    kty = ky + 1;
+                }
+                // }
+                boolean out = false;
+                for (int variant = 0; variant < 4; variant++) {
+                    for (int k = 0; k < blocks.size(); k++) {
+                        Block block = blocks.get(k);
+                        if (ktx == block.getRelX() && kty == block.getRelY()) {
+                            if (block.isDoors()) {
+                                block.openDoor();
+                            }
+                            if (block.getLayer() <= 1 && !block.isCargoOnSpot()) {
+                                block.colorUp(new Color(0, 255, 0, 60));
+                                men.get(mi).setRelPosToMove(ktx, kty);
+                                men.get(mi).moveTo();
+                                block.menOnSpot();
+                                for (int i = 0; i < blocks.size(); i++) {
+                                    if (men.get(mi).relX == blocks.get(i).getRelX()) {
+                                        if (men.get(mi).relY == blocks.get(i).getRelY()) {
+                                            blocks.get(i).menLeftSpot();
+                                        }
+                                    }
+                                }
+                                out = true;
+                                break;
+                            } else {
+                                block.colorUp(new Color(0, 255, 255, 60));
+                                break;
+                            }
                         }
                     }
-                }
 
-                if (out) {
-                    break;
-                }
-                switch (variant) {
-                    case 0:
-                        if (kx > tx) {
-                            ktx++;
-                            kty = (ky > ty) ? kty - 1 : kty + 1;
-                        } else if (kx < tx) {
-                            ktx--;
-                            kty = (ky > ty) ? kty - 1 : kty + 1;
-                        } else if (ky > ty) {
-                            kty++;
-                            ktx = (kx > tx) ? ktx + 1 : ktx - 1;
-                        } else if (ky < ty) {
-                            kty--;
-                            ktx = (kx > tx) ? ktx - 1 : ktx + 1;
-                        }
+                    if (out) {
                         break;
-                    case 1:
-                        if (ktx == kx) {
-                            kty = (kty > ky) ? kty - 2 : kty + 2;
-                        } else if (kty == ky) {
-                            ktx = (ktx > kx) ? ktx - 2 : ktx + 2;
-                        }
-                        break;
-                    case 2:
-                        if (ktx != kx) {
-                            kty++;
-                            ktx--;
-                        } else if (kty != ky) {
-                            ktx++;
-                            kty--;
-                        }
-                        break;
-                    case 3:
-                        if (ktx != kx) {
-                            ktx += 2;
-                        } else if (kty != ky) {
-                            kty += 2;
-                        }
-                        break;
-                    default:
-                        kty = ky;
-                        ktx = kx;
-                        break;
+                    }
+                    switch (variant) {
+                        case 0:
+                            if (kx > tx) {
+                                ktx++;
+                                kty = (ky > ty) ? kty - 1 : kty + 1;
+                            } else if (kx < tx) {
+                                ktx--;
+                                kty = (ky > ty) ? kty - 1 : kty + 1;
+                            } else if (ky > ty) {
+                                kty++;
+                                ktx = (kx > tx) ? ktx + 1 : ktx - 1;
+                            } else if (ky < ty) {
+                                kty--;
+                                ktx = (kx > tx) ? ktx - 1 : ktx + 1;
+                            }
+                            break;
+                        case 1:
+                            if (ktx == kx) {
+                                kty = (kty > ky) ? kty - 2 : kty + 2;
+                            } else if (kty == ky) {
+                                ktx = (ktx > kx) ? ktx - 2 : ktx + 2;
+                            }
+                            break;
+                        case 2:
+                            if (ktx != kx) {
+                                kty++;
+                                ktx--;
+                            } else if (kty != ky) {
+                                ktx++;
+                                kty--;
+                            }
+                            break;
+                        case 3:
+                            if (ktx != kx) {
+                                ktx += 2;
+                            } else if (kty != ky) {
+                                kty += 2;
+                            }
+                            break;
+                        default:
+                            kty = ky;
+                            ktx = kx;
+                            break;
+
+                    }
 
                 }
-
             }
         }
 
