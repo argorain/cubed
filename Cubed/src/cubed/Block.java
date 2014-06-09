@@ -2,6 +2,7 @@ package cubed;
 
 import java.awt.Color;
 import java.awt.Graphics2D;
+import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 
@@ -27,6 +28,7 @@ public class Block extends Entity {
     private String name;
     private boolean colored;
     private Color color;
+    private boolean locked=false;
 
     public Block(String[] images, Serialiser s) {
         super(0, 0, images, s);
@@ -218,6 +220,10 @@ public class Block extends Entity {
                             run();
                             System.out.println("blast");
                             break;
+                        case "doors":
+                            if(locked) unlockDoor();
+                            else lockDoor();
+                            break;
                         default:
                             break;
                     }
@@ -278,8 +284,18 @@ public class Block extends Entity {
     }
 
     void openDoor() {
-        redraw();
-        hitboxAllowed = !hitboxAllowed;
-        layer = hitboxAllowed ? 10 : 0;
+        if (!locked) {
+            redraw();
+            hitboxAllowed = !hitboxAllowed;
+            layer = hitboxAllowed ? 10 : 0;
+        }
+    }
+    
+    void lockDoor(){
+        locked=true;
+    }
+    
+    void unlockDoor(){
+        locked=false;
     }
 }
