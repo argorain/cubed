@@ -205,6 +205,7 @@ public class Block extends Entity {
                             redraw();
                             hitboxAllowed = !hitboxAllowed;
                             System.out.println("door action");
+                            layer=hitboxAllowed?10:0;
                             break;
                         default:
                             break;

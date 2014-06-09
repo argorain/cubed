@@ -331,14 +331,14 @@ public class SpaceShip extends SREObject {
         if (!men.get(0).onSpot() && !men.get(0).isMoving()) {
             int kx = men.get(0).relX, ky = men.get(0).relY, tx = men.get(0).trelX, ty = men.get(0).trelY, ktx = kx, kty = ky;
             //if (Math.abs(kx - tx) > Math.abs(ky - ty)) {
-            if (kx > tx) {
+            if (dC(kx, tx) < 0) {
                 ktx = kx - 1;
-            } else if (kx < tx) {
+            } else if (dC(kx, tx) > 0) {
                 ktx = kx + 1;
             } //} else {
-            else if (ky > ty) {
+            else if (dC(ky, ty) < 0) {
                 kty = ky - 1;
-            } else if (ky < ty) {
+            } else if (dC(ky, ty) > 0) {
                 kty = ky + 1;
             }
             // }
@@ -358,7 +358,7 @@ public class SpaceShip extends SREObject {
                         }
                     }
                 }
-                
+
                 if (out) {
                     break;
                 }
@@ -366,24 +366,23 @@ public class SpaceShip extends SREObject {
                     case 0:
                         if (kx > tx) {
                             ktx++;
-                            kty=(ky>ty)?kty-1:kty+1;
+                            kty = (ky > ty) ? kty - 1 : kty + 1;
                         } else if (kx < tx) {
                             ktx--;
-                            kty=(ky>ty)?kty-1:kty+1;
+                            kty = (ky > ty) ? kty - 1 : kty + 1;
                         } else if (ky > ty) {
                             kty++;
-                            ktx=(kx>tx)?ktx+1:ktx-1;
+                            ktx = (kx > tx) ? ktx + 1 : ktx - 1;
                         } else if (ky < ty) {
                             kty--;
-                            ktx=(kx>tx)?ktx-1:ktx+1;
+                            ktx = (kx > tx) ? ktx - 1 : ktx + 1;
                         }
-
                         break;
                     case 1:
                         if (ktx == kx) {
-                            kty=(kty>ky)?kty-2:kty+2;
+                            kty = (kty > ky) ? kty - 2 : kty + 2;
                         } else if (kty == ky) {
-                            ktx=(ktx>kx)?ktx-2:ktx+2;
+                            ktx = (ktx > kx) ? ktx - 2 : ktx + 2;
                         }
                         break;
                     case 2:
@@ -414,6 +413,14 @@ public class SpaceShip extends SREObject {
 
         /*camera.move(velocityX, velocityY);
          System.out.println(velocityX+" "+velocityY);*/
+    }
+
+    private int dC(int sC, int tC) {
+        return tC - sC;
+    }
+
+    private int rDirection() {
+        return (int) Math.round((Math.random() * 2) - 1);
     }
 
     public void blockAction(float x, float y, int actionSource) {
