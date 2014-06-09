@@ -352,37 +352,45 @@ public class SpaceShip extends SREObject {
                             men.get(0).moveTo();
                             out = true;
                             break;
-                        }else{
+                        } else {
                             blocks.get(k).colorUp(new Color(0, 255, 255, 60));
                             break;
                         }
                     }
                 }
+                
                 if (out) {
                     break;
                 }
                 switch (variant) {
                     case 0:
-                        if (ktx != kx) {
-                            kty++;
-                            ktx--;
-                        }else if (kty != ky) {
+                        if (kx > tx) {
                             ktx++;
+                            kty=(ky>ty)?kty-1:kty+1;
+                        } else if (kx < tx) {
+                            ktx--;
+                            kty=(ky>ty)?kty-1:kty+1;
+                        } else if (ky > ty) {
+                            kty++;
+                            ktx=(kx>tx)?ktx+1:ktx-1;
+                        } else if (ky < ty) {
                             kty--;
+                            ktx=(kx>tx)?ktx-1:ktx+1;
                         }
+
                         break;
                     case 1:
-                        if (ktx != kx) {
-                            kty -= 2;
-                        }else if (kty != ky) {
-                            ktx -= 2;
+                        if (ktx == kx) {
+                            kty=(kty>ky)?kty-2:kty+2;
+                        } else if (kty == ky) {
+                            ktx=(ktx>kx)?ktx-2:ktx+2;
                         }
                         break;
                     case 2:
                         if (ktx != kx) {
                             kty++;
                             ktx--;
-                        }else if (kty != ky) {
+                        } else if (kty != ky) {
                             ktx++;
                             kty--;
                         }
@@ -390,7 +398,7 @@ public class SpaceShip extends SREObject {
                     case 3:
                         if (ktx != kx) {
                             ktx += 2;
-                        }else if (kty != ky) {
+                        } else if (kty != ky) {
                             kty += 2;
                         }
                         break;
