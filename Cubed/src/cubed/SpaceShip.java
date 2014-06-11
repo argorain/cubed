@@ -292,7 +292,7 @@ public class SpaceShip extends SREObject {
                     clickedLMB = true;
                     px = block.getRelX();
                     py = block.getRelY();
-                    if (block.getLayer() <= 1 && !block.isCargoOnSpot() && !block.isMenOnSpot() ) {
+                    if (block.getLayer() <= 1 && !block.isCargoOnSpot() && !block.isMenOnSpot()) {
                         freePos = true;
 
                     }
@@ -334,6 +334,7 @@ public class SpaceShip extends SREObject {
         }
 
         for (int mi = 0; mi < men.size(); mi++) {
+            int rand = (int) (Math.round(Math.random() * 2) - 1);
             if (!men.get(mi).onSpot() && !men.get(mi).isMoving()) {
                 int kx = men.get(mi).relX, ky = men.get(mi).relY, tx = men.get(mi).trelX, ty = men.get(mi).trelY, ktx = kx, kty = ky;
                 //if (Math.abs(kx - tx) > Math.abs(ky - ty)) {
@@ -380,52 +381,100 @@ public class SpaceShip extends SREObject {
                     if (out) {
                         break;
                     }
-                    switch (variant) {
-                        case 0:
-                            if (kx > tx) {
-                                ktx++;
-                                kty = (ky > ty) ? kty - 1 : kty + 1;
-                            } else if (kx < tx) {
-                                ktx--;
-                                kty = (ky > ty) ? kty - 1 : kty + 1;
-                            } else if (ky > ty) {
-                                kty++;
-                                ktx = (kx > tx) ? ktx + 1 : ktx - 1;
-                            } else if (ky < ty) {
-                                kty--;
-                                ktx = (kx > tx) ? ktx - 1 : ktx + 1;
-                            }
-                            break;
-                        case 1:
-                            if (ktx == kx) {
-                                kty = (kty > ky) ? kty - 2 : kty + 2;
-                            } else if (kty == ky) {
-                                ktx = (ktx > kx) ? ktx - 2 : ktx + 2;
-                            }
-                            break;
-                        case 2:
-                            if (ktx != kx) {
-                                kty++;
-                                ktx--;
-                            } else if (kty != ky) {
-                                ktx++;
-                                kty--;
-                            }
-                            break;
-                        case 3:
-                            if (ktx != kx) {
-                                ktx += 2;
-                            } else if (kty != ky) {
-                                kty += 2;
-                            }
-                            break;
-                        default:
-                            kty = ky;
-                            ktx = kx;
-                            break;
+                    if (rand > 0) {
+                        switch (variant) {
+                            case 0:
+                                if (kx > tx) {
+                                    ktx++;
+                                    kty = (ky > ty) ? kty - 1 : kty + 1;
+                                } else if (kx < tx) {
+                                    ktx--;
+                                    kty = (ky > ty) ? kty - 1 : kty + 1;
+                                } else if (ky > ty) {
+                                    kty++;
+                                    ktx = (kx > tx) ? ktx + 1 : ktx - 1;
+                                } else if (ky < ty) {
+                                    kty--;
+                                    ktx = (kx > tx) ? ktx - 1 : ktx + 1;
+                                }
+                                break;
+                            case 1:
+                                if (ktx == kx) {
+                                    kty = (kty > ky) ? kty - 2 : kty + 2;
+                                } else if (kty == ky) {
+                                    ktx = (ktx > kx) ? ktx - 2 : ktx + 2;
+                                }
+                                break;
+                            case 2:
+                                if (ktx != kx) {
+                                    kty++;
+                                    ktx--;
+                                } else if (kty != ky) {
+                                    ktx++;
+                                    kty--;
+                                }
+                                break;
+                            case 3:
+                                if (ktx != kx) {
+                                    ktx += 2;
+                                } else if (kty != ky) {
+                                    kty += 2;
+                                }
+                                break;
+                            default:
+                                kty = ky;
+                                ktx = kx;
+                                break;
 
+                        }
+
+                    } else {
+                        switch (variant) {
+                            case 0:
+                                if (ky > ty) {
+                                    kty++;
+                                    ktx = (kx > tx) ? ktx - 1 : ktx + 1;
+                                } else if (ky < ty) {
+                                    kty--;
+                                    ktx = (kx > tx) ? ktx + 1 : ktx - 1;
+                                } else if (kx > tx) {
+                                    ktx++;
+                                    kty = (ky > ty) ? kty + 1 : kty - 1;
+                                } else if (kx < tx) {
+                                    ktx--;
+                                    kty = (ky > ty) ? kty + 1 : kty - 1;
+                                }
+                                break;
+                            case 1:
+                                if (ktx == kx) {
+                                    kty = (kty > ky) ? kty - 2 : kty + 2;
+                                } else if (kty == ky) {
+                                    ktx = (ktx > kx) ? ktx - 2 : ktx + 2;
+                                }
+                                break;
+                            case 2:
+                                if (ktx != kx) {
+                                    kty--;
+                                    ktx++;
+                                } else if (kty != ky) {
+                                    ktx--;
+                                    kty++;
+                                }
+                                break;
+                            case 3:
+                                if (ktx != kx) {
+                                    ktx -= 2;
+                                } else if (kty != ky) {
+                                    kty -= 2;
+                                }
+                                break;
+                            default:
+                                kty = ky;
+                                ktx = kx;
+                                break;
+
+                        }
                     }
-
                 }
             }
         }

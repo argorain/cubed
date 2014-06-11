@@ -50,7 +50,7 @@ public class TestWorld extends BaseState {
         //add(sprite);
 //                ship.setCamera(camera);
         ship.join(sprite);
-        ship.join(sit);
+        //ship.join(sit);
         ship.setHitBoxVisible(false);
 //		add(ship);
         //add(block);
