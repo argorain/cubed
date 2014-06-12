@@ -334,32 +334,99 @@ public class SpaceShip extends SREObject {
         }
 
         for (int mi = 0; mi < men.size(); mi++) {
-            int rand = (int) (Math.round(Math.random() * 2) - 1);
+            //int rand = (int) (Math.round(Math.random() * 2) - 1);
             if (!men.get(mi).onSpot() && !men.get(mi).isMoving()) {
-                int kx = men.get(mi).relX, ky = men.get(mi).relY, tx = men.get(mi).trelX, ty = men.get(mi).trelY, ktx = kx, kty = ky;
-                //if (Math.abs(kx - tx) > Math.abs(ky - ty)) {
-                if (dC(kx, tx) < 0) {
-                    ktx = kx - 1;
-                } else if (dC(kx, tx) > 0) {
-                    ktx = kx + 1;
-                } //} else {
-                else if (dC(ky, ty) < 0) {
-                    kty = ky - 1;
-                } else if (dC(ky, ty) > 0) {
-                    kty = ky + 1;
+                int kx = men.get(mi).relX, ky = men.get(mi).relY, tx = men.get(mi).trelX, ty = men.get(mi).trelY, dvx = men.get(mi).dVectX, dvy = men.get(mi).dVectY;
+                int ptx = kx, pty = ky, dirX = 0, dirY = 0;
+                int counter = 1;
+
+                dirX = dC(kx, tx);
+                dirY = dC(ky, ty);
+
+                float dV = dVect(dirX, dirY);
+                if (dV>1.1) {
+                    if (dirX > 0) {
+                        ptx++;
+                    } else {
+                        ptx--;
+                    }
+                } else if (dV<0.9) {
+                    if (dirY > 0) {
+                        pty++;
+                    } else {
+                        pty--;
+                    }
+                } else {
+                    if (dvx == 1 && dvy == 0) {
+                        ptx++;
+                    } else if (dvx == -1 && dvy == 0) {
+                        ptx--;
+                    } else if (dvx == 0 && dvy == 1) {
+                        pty++;
+                    } else if (dvx == 0 && dvy == -1) {
+                        pty--;
+                    }
                 }
-                // }
-                boolean out = false;
-                for (int variant = 0; variant < 4; variant++) {
+//                if (dvx == 0 && dvy == 0) {
+//                    if (dirX > 0) {
+//                        ptx++;
+//                    } else if (dirX < 0) {
+//                        ptx--;
+//                    } else if (dirY > 0) {
+//                        pty++;
+//                    } else if (dirY < 0) {
+//                        pty--;
+//                    }
+//                } else if (dirX == 0) {
+//                    if (dirY > 0) {
+//                        pty++;
+//                    } else {
+//                        pty--;
+//                    }
+//                } else if (dirY == 0) {
+//                    if (dirX > 0) {
+//                        ptx++;
+//                    } else {
+//                        ptx--;
+//                    }
+//                } else if (dvx == 1 && dvy == 0) {
+//                    ptx++;
+//                } else if (dvx == -1 && dvy == 0) {
+//                    ptx--;
+//                } else if (dvx == 0 && dvy == 1) {
+//                    pty++;
+//                } else if (dvx == 0 && dvy == -1) {
+//                    pty--;
+//                }
+//                if (Math.random() > 0.8) {
+//                    ptx = kx;
+//                    pty = ky;
+//                    if (Math.random() > 0.5) {
+//                        if (ptx > 0) {
+//                            ptx = Math.random() > 0.5 ? +1 : -1;
+//                        } else {
+//                            ptx++;
+//                        }
+//                    } else {
+//                        if (pty > 0) {
+//                            pty = Math.random() > 0.5 ? +1 : -1;
+//                        } else {
+//                            pty++;
+//                        }
+//                    }
+//                }
+
+                boolean over = false;
+                do {
                     for (int k = 0; k < blocks.size(); k++) {
                         Block block = blocks.get(k);
-                        if (ktx == block.getRelX() && kty == block.getRelY()) {
+                        if (ptx == block.getRelX() && pty == block.getRelY()) {
                             if (block.isDoors()) {
                                 block.openDoor();
                             }
                             if (block.getLayer() <= 1 && !block.isCargoOnSpot()) {
                                 block.colorUp(new Color(0, 255, 0, 60));
-                                men.get(mi).setRelPosToMove(ktx, kty);
+                                men.get(mi).setRelPosToMove(ptx, pty);
                                 men.get(mi).moveTo();
                                 block.menOnSpot();
                                 for (int i = 0; i < blocks.size(); i++) {
@@ -369,113 +436,61 @@ public class SpaceShip extends SREObject {
                                         }
                                     }
                                 }
-                                out = true;
-                                break;
+                                men.get(mi).dVectX = ptx - kx;
+                                men.get(mi).dVectY = pty - ky;
+                                over = true;
                             } else {
                                 block.colorUp(new Color(0, 255, 255, 60));
-                                break;
                             }
+                            break;
                         }
                     }
-
-                    if (out) {
-                        break;
-                    }
-                    if (rand > 0) {
-                        switch (variant) {
-                            case 0:
-                                if (kx > tx) {
-                                    ktx++;
-                                    kty = (ky > ty) ? kty - 1 : kty + 1;
-                                } else if (kx < tx) {
-                                    ktx--;
-                                    kty = (ky > ty) ? kty - 1 : kty + 1;
-                                } else if (ky > ty) {
-                                    kty++;
-                                    ktx = (kx > tx) ? ktx + 1 : ktx - 1;
-                                } else if (ky < ty) {
-                                    kty--;
-                                    ktx = (kx > tx) ? ktx - 1 : ktx + 1;
-                                }
-                                break;
+                    if (!over) {
+                        ptx = kx;
+                        pty = ky;
+                        switch (counter) {
                             case 1:
-                                if (ktx == kx) {
-                                    kty = (kty > ky) ? kty - 2 : kty + 2;
-                                } else if (kty == ky) {
-                                    ktx = (ktx > kx) ? ktx - 2 : ktx + 2;
+                                if (dirX > 0) {
+                                    pty++;
+                                } else if (dirX < 0) {
+                                    pty--;
+                                } else if (dirY > 0) {
+                                    ptx++;
+                                } else if (dirY < 0) {
+                                    ptx--;
                                 }
                                 break;
                             case 2:
-                                if (ktx != kx) {
-                                    kty++;
-                                    ktx--;
-                                } else if (kty != ky) {
-                                    ktx++;
-                                    kty--;
+                                if (dirX > 0) {
+                                    pty--;
+                                } else if (dirX < 0) {
+                                    pty++;
+                                } else if (dirY > 0) {
+                                    ptx--;
+                                } else if (dirY < 0) {
+                                    ptx++;
                                 }
                                 break;
                             case 3:
-                                if (ktx != kx) {
-                                    ktx += 2;
-                                } else if (kty != ky) {
-                                    kty += 2;
+                                if (dirX > 0) {
+                                    ptx--;
+                                } else if (dirX < 0) {
+                                    ptx++;
+                                } else if (dirY > 0) {
+                                    pty--;
+                                } else if (dirY < 0) {
+                                    pty++;
                                 }
                                 break;
                             default:
-                                kty = ky;
-                                ktx = kx;
-                                break;
-
+                                over = true;
                         }
 
-                    } else {
-                        switch (variant) {
-                            case 0:
-                                if (ky > ty) {
-                                    kty++;
-                                    ktx = (kx > tx) ? ktx - 1 : ktx + 1;
-                                } else if (ky < ty) {
-                                    kty--;
-                                    ktx = (kx > tx) ? ktx + 1 : ktx - 1;
-                                } else if (kx > tx) {
-                                    ktx++;
-                                    kty = (ky > ty) ? kty + 1 : kty - 1;
-                                } else if (kx < tx) {
-                                    ktx--;
-                                    kty = (ky > ty) ? kty + 1 : kty - 1;
-                                }
-                                break;
-                            case 1:
-                                if (ktx == kx) {
-                                    kty = (kty > ky) ? kty - 2 : kty + 2;
-                                } else if (kty == ky) {
-                                    ktx = (ktx > kx) ? ktx - 2 : ktx + 2;
-                                }
-                                break;
-                            case 2:
-                                if (ktx != kx) {
-                                    kty--;
-                                    ktx++;
-                                } else if (kty != ky) {
-                                    ktx--;
-                                    kty++;
-                                }
-                                break;
-                            case 3:
-                                if (ktx != kx) {
-                                    ktx -= 2;
-                                } else if (kty != ky) {
-                                    kty -= 2;
-                                }
-                                break;
-                            default:
-                                kty = ky;
-                                ktx = kx;
-                                break;
-
-                        }
+                        counter++;
                     }
-                }
+                } while (!over);
+
+
             }
         }
 
@@ -483,6 +498,15 @@ public class SpaceShip extends SREObject {
          System.out.println(velocityX+" "+velocityY);*/
     }
 
+    private float dVect(int x, int y){
+        int norm = x>y?x:y;
+        try{
+            return (Math.abs(x)/norm) / (Math.abs(y)/norm);
+        }catch(ArithmeticException e){
+            return Math.abs(x)/norm;
+        }
+    }
+    
     private int dC(int sC, int tC) {
         return tC - sC;
     }

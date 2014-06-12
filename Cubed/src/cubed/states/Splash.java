@@ -112,7 +112,7 @@ public class Splash extends BaseState {
                             System.err.print("Error during loading " + shows[show] + " logo.\n" + e.getCause());
                         }
                     } else {
-                        gc.enterState(10); //enter next
+                        gc.enterState(2); //enter next
                     }
                 }
                 break;

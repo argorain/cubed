@@ -14,7 +14,7 @@ public class Man extends Entity {
     String health = "100%";
     private static final int kX = 30;
     private static final int kY = -85;
-    int relX, relY, trelX, trelY, mrelX, mrelY;
+    int relX, relY, trelX, trelY, mrelX, mrelY, dVectX, dVectY;
     boolean moving = false;
     int step = 0;
     int dx = 0, dy = 0, rdx = 0, rdy = 0;
@@ -24,6 +24,7 @@ public class Man extends Entity {
 
     public Man(float x, float y, String[] images, Serialiser s) {
         super(x, y, images, s);
+        dVectX=dVectY=0;
     }
 
     public void setInfo(String name, String race, String age) {
