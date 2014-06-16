@@ -15,6 +15,8 @@ public class Man extends Entity {
     private static final int kX = 30;
     private static final int kY = -85;
     int relX, relY, trelX, trelY, mrelX, mrelY, dVectX, dVectY;
+    private final int MAP_LENGTH = 3;
+    int map[][] = new int[MAP_LENGTH][2];
     boolean moving = false;
     int step = 0;
     int dx = 0, dy = 0, rdx = 0, rdy = 0;
@@ -25,6 +27,9 @@ public class Man extends Entity {
     public Man(float x, float y, String[] images, Serialiser s) {
         super(x, y, images, s);
         dVectX=dVectY=0;
+        for(int l=0; l<MAP_LENGTH; l++){
+            map[l][0]=map[l][1]=0;
+        }
     }
 
     public void setInfo(String name, String race, String age) {
@@ -72,6 +77,7 @@ public class Man extends Entity {
         relY = y;
         setX(x * BLOCKSIZE);
         setY(y * BLOCKSIZE);
+        addPos(x, y);
     }
 
     public int relX() {
@@ -164,5 +170,14 @@ public class Man extends Entity {
             invertOverY();
             inverted=false;
         }
+    }     
+
+    private void addPos(int x, int y) {
+        for(int i=MAP_LENGTH-1; i>0; i--){
+            map[i][0]=map[i-1][0];
+            map[i][1]=map[i-1][1];
+        }
+        map[0][0]=x;
+        map[0][1]=y;
     }
 }
