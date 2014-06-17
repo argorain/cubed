@@ -352,19 +352,33 @@ public class SpaceShip extends SREObject {
                     pty++;
                 }else if(dirY==-1&&dirX==0){
                     pty--;
-                }else if (dV > 1.15) {
+                }else if(dirX==1&&dirY==1){
+                    ptx++;
+                }else if(dirX==1&&dirY==-1){
+                    pty--;
+                }else if(dirX==-1&&dirY==1){
+                    ptx--;
+                }else if(dirX==-1&&dirY==-1){
+                    pty++;
+                }else if(dV==1){
                     if (dirX > 0) {
                         ptx++;
                     } else {
                         ptx--;
                     }
-                } else if (dV < 0.85) {
+                }else if (dV > 1.2) {
+                    if (dirX > 0) {
+                        ptx++;
+                    } else {
+                        ptx--;
+                    }
+                } else if (dV < 0.80) {
                     if (dirY > 0) {
                         pty++;
                     } else {
                         pty--;
                     }
-                } else {
+                }else {
                     if (dvx == 1 && dvy == 0) {
                         ptx++;
                     } else if (dvx == -1 && dvy == 0) {
@@ -491,6 +505,17 @@ public class SpaceShip extends SREObject {
                                     pty++;
                                 }
                                 break;
+                            case 4:
+                                if (dirX > 0) {
+                                    ptx++;
+                                } else if (dirX < 0) {
+                                    ptx--;
+                                } else if (dirY > 0) {
+                                    pty++;
+                                } else if (dirY < 0) {
+                                    pty--;
+                                }
+                                break;
                             default:
                                 over = true;
                         }
@@ -508,7 +533,7 @@ public class SpaceShip extends SREObject {
     }
 
     private float dVect(int x, int y) {
-        float norm = x > y ? x : y;
+        float norm = Math.abs(x) > Math.abs(y) ? Math.abs(x) : Math.abs(y);
         try {
             return (Math.abs(x) / norm) / (Math.abs(y) / norm);
         } catch (ArithmeticException e) {

@@ -14,7 +14,7 @@ public class Main extends GameContainer {
     public static void main(String[] args) {
 
         /* JUST FOR CREATION PURPOSES */
-        System.out.println("*** TESTING ONLY ***");
+        /*System.out.println("*** TESTING ONLY ***");
         Serialiser s1 = new Serialiser("../pack.dat");
         Serialiser s2 = new Serialiser("../ships.dat");
         Serialiser s3 = new Serialiser("../conf.dat");
