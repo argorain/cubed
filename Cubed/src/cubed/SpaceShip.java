@@ -361,10 +361,16 @@ public class SpaceShip extends SREObject {
                 }else if(dirX==-1&&dirY==-1){
                     pty++;
                 }else if(dV==1){
-                    if (dirX > 0) {
-                        ptx++;
-                    } else {
+                    int mx=men.get(mi).map[1][0];
+                    int my=men.get(mi).map[1][1];
+                    if(mx==ptx+1&&my==pty){
                         ptx--;
+                    }else if(mx==ptx-1&&my==pty){
+                        ptx++;
+                    }else if(mx==ptx&&my==pty+1){
+                        pty--;
+                    }else{
+                        pty++;
                     }
                 }else if (dV > 1.2) {
                     if (dirX > 0) {
