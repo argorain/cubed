@@ -360,7 +360,7 @@ public class SpaceShip extends SREObject {
                     ptx--;
                 }else if(dirX==-1&&dirY==-1){
                     pty++;
-                }else if(dV==1){
+                /*}else if(dV==1){  //buggy as fuck
                     int mx=men.get(mi).map[1][0];
                     int my=men.get(mi).map[1][1];
                     if(mx==ptx+1&&my==pty){
@@ -371,7 +371,7 @@ public class SpaceShip extends SREObject {
                         pty--;
                     }else{
                         pty++;
-                    }
+                    }*/
                 }else if (dV > 1.2) {
                     if (dirX > 0) {
                         ptx++;
@@ -465,6 +465,7 @@ public class SpaceShip extends SREObject {
                                         }
                                     }
                                 }
+                                System.out.println("dv: "+dvx+"\t"+dvy+" | pt-map: "+(ptx-men.get(mi).map[0][0])+"\t"+(pty-men.get(mi).map[0][1]));
                                 men.get(mi).dVectX = ptx - kx;
                                 men.get(mi).dVectY = pty - ky;
                                 over = true;
