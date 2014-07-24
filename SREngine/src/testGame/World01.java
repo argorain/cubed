@@ -21,20 +21,20 @@ import srengine.utils.Serialiser;
 
 public class World01 extends BaseState {
 
-    Serialiser s = new Serialiser("../pack.dat");
-    Entity sprite = new Entity(100, 100, "../Graphics/people/Rain_01.png");
-    Entity sprite2 = new Entity(100, 200, "../Graphics/people/Sit_01.png");
+    Serialiser s = new Serialiser("pack.dat");
+    Entity sprite = new Entity(100, 100, "Graphics/people/Rain_01.png");
+    Entity sprite2 = new Entity(100, 200, "Graphics/people/Sit_01.png");
     Entity entity;
     Entity brick11 = new Entity(200, 200,
-            "../Graphics/blocks/floor_metal_01.png");
+            "Graphics/blocks/floor_metal_01.png");
     Entity brick12 = new Entity(232, 200,
-            "../Graphics/blocks/floor_metal_01.png");
+            "Graphics/blocks/floor_metal_01.png");
     Entity brick13 = new Entity(264, 200,
-            "../Graphics/blocks/floor_metal_01.png");
+            "Graphics/blocks/floor_metal_01.png");
     Entity brick21 = new Entity(200, 232,
-            "../Graphics/blocks/floor_metal_01.png");
+            "Graphics/blocks/floor_metal_01.png");
     Entity brick22 = new Entity(232, 232,
-            "../Graphics/blocks/floor_metal_01.png");
+            "Graphics/blocks/floor_metal_01.png");
     Rectangle rect = new Rectangle(32, 32);
     Rectangle rect2 = new Rectangle(32, 40);
     Rectangle rect3 = new Rectangle(200, 300, 32, 32);
@@ -57,8 +57,8 @@ public class World01 extends BaseState {
         super(id);
         setBackground(Color.darkGray);
         ArrayList<String> l = new ArrayList<>();
-        l.add("../Graphics/people/Sit_01_a.png");
-        l.add("../Graphics/people/Sit_01_b.png");
+        l.add("Graphics/people/Sit_01_a.png");
+        l.add("Graphics/people/Sit_01_b.png");
         entity = new Entity(100, 232, l);
         entity.run(300);
 
@@ -110,7 +110,7 @@ public class World01 extends BaseState {
         g.setColor(Color.black);
         g.drawLine(500, 200, (int) Math.round(Math.sin(angle) * 50 + 500),
                 (int) Math.round(Math.cos(angle) * 50 + 200));
-        g.drawLine(0, 0, gc.getWindow().getWidth(), gc.getWindow().getHeight());
+        g.drawLine(0, 0, gc.getWindowWidth(), gc.getWindowHeight());
         g.drawLine(0, 0, 600, 600);
         g.drawChars("It's race!".toCharArray(), 0, 10, 10, 290);
         rect3.draw(g, gc);
