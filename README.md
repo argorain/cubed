@@ -1,4 +1,4 @@
 cubed
 =====
 
-Cubed game
+Cubed game is wonderful
