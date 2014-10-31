@@ -1,19 +1,17 @@
 package cubed.states;
 
-import java.awt.Color;
-import java.awt.Graphics2D;
-import java.awt.event.KeyEvent;
+import Core.BaseState;
+import Core.Color;
+import Core.Entity;
+import Core.GameCore;
+import Core.Graphics;
+import Core.InputManager;
 
 import cubed.Block;
 import cubed.Man;
 import cubed.SpaceShip;
 import cubed.gui.MouseMenu;
 
-import srengine.BaseState;
-import srengine.Camera;
-import srengine.Entity;
-import srengine.GameContainer;
-import srengine.InputManager;
 import srengine.utils.Serialiser;
 
 public class TestWorld extends BaseState {
@@ -63,63 +61,63 @@ public class TestWorld extends BaseState {
     }
 
     @Override
-    protected void draw(Graphics2D g, GameContainer gc) {
-        super.draw(g, gc);
-        g.setColor(Color.black);
+    protected void draw(GameCore gc, Graphics g) {
+        super.draw(gc, g);
+        g.setColor(Color.BLACK);
     }
 
     @Override
-    protected void update(InputManager input, GameContainer gc) {
-        super.update(input, gc);
-        if (input.event) {
-            ship.blockAction(input.getPosX() - getCameraXMove(), input.getPosY() - getCameraYMove(), input.MBPressed());
-            if (input.isKeyPressed(KeyEvent.VK_A)) {
-                ship.setX(ship.getX() - 2f);
+    protected void update(GameCore gc, InputManager input, int delta) {
+        super.update(gc, input, delta);
+//        if (input.event) {
+            ship.blockAction(input.getMouseX() - getCamera().getXMove(), input.getMouseY() - getCamera().getYMove(), input.MBPressed());
+            if (input.isKeyPressed(InputManager.KEY_A)) {
+                ship.setX(ship.getX() - 0.5f*delta);
             }
-            if (input.isKeyPressed(KeyEvent.VK_D)) {
-                ship.setX(ship.getX() + 2f);
-                ship.setAcceleration(-0.001f);
+            if (input.isKeyPressed(InputManager.KEY_D)) {
+                ship.setX(ship.getX() + 0.5f*delta);
+//                ship.setAcceleration(-0.001f);
             }
-            if (input.isKeyPressed(KeyEvent.VK_W)) {
+            if (input.isKeyPressed(InputManager.KEY_W)) {
 //				ship.setY(ship.getY() - 2f);
 //                                ship.setVelocity(0.2f, 0);
                 ship.setAcceleration(0.001f);
             }
-            if (input.isKeyPressed(KeyEvent.VK_S)) {
+            if (input.isKeyPressed(InputManager.KEY_S)) {
                 //ship.setY(ship.getY() + 2f);
                 ship.setAcceleration(-0.001f);
             }
 
-            if (input.isKeyTyped(KeyEvent.VK_Q)) {
+            if (input.isKeyTyped(InputManager.KEY_Q)) {
                 //sprite.rotate(0.1f);
-                ship.rotate(0.01f);
+                ship.rotate(0.01f*delta);
             }
-            if (input.isKeyTyped(KeyEvent.VK_E)) {
-                ship.rotate(-0.01f);
+            if (input.isKeyTyped(InputManager.KEY_E)) {
+                ship.rotate(-0.01f*delta);
                 //sprite.setAngle(sprite.getAngle() - 0.1f);
             }
-            if (input.isKeyPressed(KeyEvent.VK_SPACE)) {
+            if (input.isKeyPressed(InputManager.KEY_SPACE)) {
                 gc.enterState(1);
             }
 
-            if (input.isKeyPressed(KeyEvent.VK_LEFT)) {
-                camera.move(-2, 0);
+            if (input.isKeyPressed(InputManager.KEY_LEFT)) {
+                getCamera().move(-2, 0);
 //				sprite.setX(sprite.getX() - 2f);
             }
-            if (input.isKeyPressed(KeyEvent.VK_RIGHT)) {
-                camera.move(2, 0);
+            if (input.isKeyPressed(InputManager.KEY_RIGHT)) {
+                getCamera().move(2, 0);
 //				sprite.setX(sprite.getX() + 2f);
 
             }
-            if (input.isKeyPressed(KeyEvent.VK_UP)) {
-                camera.move(0, -2);
+            if (input.isKeyPressed(InputManager.KEY_UP)) {
+                getCamera().move(0, -2);
 //				sprite.setY(sprite.getY() - 2f);
             }
-            if (input.isKeyPressed(KeyEvent.VK_DOWN)) {
-                camera.move(0, 2);
+            if (input.isKeyPressed(InputManager.KEY_DOWN)) {
+                getCamera().move(0, 2);
 //				sprite.setY(sprite.getY() + 2f);
             }
-            input.resetEvent();
-        }
+//            input.resetEvent();
+//        }
     }
 }

@@ -1,16 +1,15 @@
 package cubed.designer;
 
-import java.awt.Color;
-import java.awt.Graphics;
-import java.awt.Graphics2D;
-import java.awt.Image;
+import Core.Color;
+import Core.GameCore;
+import Core.Graphics;
+import Core.Image;
+import Core.InputManager;
+import Core.SREObject;
 import java.util.ArrayList;
 
 import javax.imageio.ImageIO;
 
-import srengine.GameContainer;
-import srengine.InputManager;
-import srengine.SREObject;
 import srengine.utils.Serialiser;
 import cubed.Block;
 
@@ -36,8 +35,10 @@ public class Menu extends SREObject{
 		this.width = width;
 		this.height = height;
 		try {
-			mask = (ImageIO.read(s.getData(image)));
-			back = (ImageIO.read(s.getData(imBack)));
+                    mask = Image.read(s.getData(image));
+                    back = Image.read(s.getData(imBack));
+//			mask = (ImageIO.read(s.getData(image)));
+//			back = (ImageIO.read(s.getData(imBack)));
 		} catch (Exception ex) {
 			System.err.println("Cannot load animation resource.");
 		}
@@ -72,34 +73,34 @@ public class Menu extends SREObject{
 		blocksize = size;
 	}
 	@Override
-	public void draw(Graphics2D g, GameContainer gc) {
+	public void draw(GameCore gc, Graphics g) {
 		if(!hidden){
-			g.setColor(Color.red);
-			g.drawImage(back, (int)(x-mx), (int)(y-my), null);
+			g.setColor(Color.RED);
+			g.drawImage(back, (int)(x-mx), (int)(y-my));
 			for(int index = 0; index<blocks.size();index++){
-				blocks.get(index).draw(g, gc);
+				blocks.get(index).draw(gc, g);
 			}
-			g.drawImage(mask, (int)(x-mx), (int)(y-my), null);
+			g.drawImage(mask, (int)(x-mx), (int)(y-my));
 			//g.drawRect((int)x, (int)y, width, height);
 			drawPop(g, mouseX, mouseY);
 		}
 	}
 
 	@Override
-	public void update(InputManager input, GameContainer gc) {
+	public void update(GameCore gc, InputManager input, int delta) {
 		if(!hidden){
 			setBlocksPosition();
 			Block block;
 			for(int i=0; i<blocks.size(); i++){
 				block = blocks.get(i);
 				if(!block.hidden()){
-					if(input.getPosX()>block.getX()&&input.getPosX()<block.getX()+blocksize&&
-							input.getPosY()>block.getY()&&input.getPosY()<block.getY()+blocksize){
+					if(input.getMouseX()>block.getX()&&input.getMouseX()<block.getX()+blocksize&&
+							input.getMouseY()>block.getY()&&input.getMouseY()<block.getY()+blocksize){
 						popBlock = block;
-						mouseX=input.getPosX();
-						mouseY=input.getPosY();
+						mouseX=input.getMouseX();
+						mouseY=input.getMouseY();
 						popOn = true;
-						if(input.isLMB()){
+						if(input.isLMBClicked()){
 							clickBlock = blocksInfo.get(i);
 							showHide();
 						}
@@ -142,10 +143,10 @@ public class Menu extends SREObject{
 	private void drawPop(Graphics g, int px, int py){
 		if(popOn){
 			g.setColor(new Color(92, 210, 72, 140));
-			g.fillRect(px, py, 200, 100);
+			g.fillRectangle(px, py, 200, 100);
 			g.setColor(new Color(250, 250, 250, 255));
-			g.drawChars(popBlock.getName().toCharArray(), 0, popBlock.getName().length(), px+10, py+15);
-			g.drawChars((popBlock.getWeight()+" kg").toCharArray(), 0, (popBlock.getWeight()+" kg").length(), px+10, py+30);
+//			g.drawChars(popBlock.getName().toCharArray(), 0, popBlock.getName().length(), px+10, py+15);
+//			g.drawChars((popBlock.getWeight()+" kg").toCharArray(), 0, (popBlock.getWeight()+" kg").length(), px+10, py+30);
 		}
 	}
 	

@@ -1,8 +1,8 @@
 package cubed;
 
+import Core.Entity;
 import java.util.Timer;
 import java.util.TimerTask;
-import srengine.Entity;
 import srengine.utils.Serialiser;
 
 public class Man extends Entity {
@@ -106,7 +106,7 @@ public class Man extends Entity {
     }
 
     void moveTo() {
-        this.run();
+        this.startAnimate();
         Timer run = new Timer();
         moving = true;
         step = 0;
@@ -160,14 +160,14 @@ public class Man extends Entity {
     
     void lookLeft(){
         if(!inverted){
-            invertOverY();
+//            invertOverY();
             inverted=true;
         }
     }
     
     void lookRight(){
         if(inverted){
-            invertOverY();
+//            invertOverY();
             inverted=false;
         }
     }     

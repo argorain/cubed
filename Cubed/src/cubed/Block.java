@@ -1,14 +1,12 @@
 package cubed;
 
-import java.awt.Color;
-import java.awt.Graphics2D;
-import java.awt.event.KeyEvent;
-import java.awt.event.MouseEvent;
+import Core.Color;
+import Core.Entity;
+import Core.GameCore;
+import Core.Graphics;
+import Core.InputManager;
 import java.util.ArrayList;
 
-import srengine.Entity;
-import srengine.GameContainer;
-import srengine.InputManager;
 import srengine.utils.Serialiser;
 
 public class Block extends Entity {
@@ -44,9 +42,9 @@ public class Block extends Entity {
         setParams(params, s);
     }
 
-    public Block(float x, float y, ArrayList<String> images) {
-        super(x, y, images);
-    }
+//    public Block(float x, float y, ArrayList<String> images) {
+//        super(x, y, images);
+//    }
 
     public Block(float x, float y, String[] images, Serialiser s) {
         super(x, y, images, s);
@@ -101,8 +99,8 @@ public class Block extends Entity {
         for (int i = 0; i < params.length; i++) {
             switch (params[i].split("=")[0]) {
                 case "anim":
-                    setPeriod(Integer.parseInt(params[i].split("=")[1]));
-                    run();
+                    startAnimate(Integer.parseInt(params[i].split("=")[1]));
+//                    run();
                     break;
                 case "doors":
                     state = "doors";
@@ -120,15 +118,15 @@ public class Block extends Entity {
                     switch (Integer.parseInt(params[i].split("=")[1])) {
                         case 90:
 //    					setDrawAngle(90);
-                            staticRotate(90);
+//                            staticRotate(90);
                             break;
                         case 180:
 //    					setDrawAngle(180);
-                            staticRotate(180);
+//                            staticRotate(180);
                             break;
                         case 270:
 //    					setDrawAngle(270);
-                            staticRotate(270);
+//                            staticRotate(270);
                             break;
                         default:
                             break;
@@ -199,7 +197,7 @@ public class Block extends Entity {
     public void action(float x, float y, int actionSource) {
         if (this.isPointInside((int) x, (int) y)) {
             switch (actionSource) {
-                case MouseEvent.BUTTON1:
+                case InputManager.MOUSE_BUTTON1:
                     System.out.println("LMB");
                     System.out.println(this.relX + "," + this.relY);
                     clickedLMB = true;
@@ -213,12 +211,12 @@ public class Block extends Entity {
                     }
                     // colorUp(new Color(0, 255, 0, 70));
                     break;
-                case MouseEvent.BUTTON2:
+                case InputManager.MOUSE_BUTTON2:
                     System.out.println("RMB");
                     switch (state) {
                         case "blast":
                             hideShow();
-                            run();
+                            startAnimate();
                             System.out.println("blast");
                             break;
                         case "doors":
@@ -229,7 +227,7 @@ public class Block extends Entity {
                             break;
                     }
                     break;
-                case MouseEvent.BUTTON3:
+                case InputManager.MOUSE_BUTTON3:
                     System.out.println("MMB");
                     switch (state) {
                         default:
@@ -252,8 +250,8 @@ public class Block extends Entity {
     }
 
     @Override
-    public void update(InputManager input, GameContainer gc) {
-        super.update(input, gc);
+    public void update(GameCore gc, InputManager input, int delta) {
+        super.update(gc, input, delta);
         if (damageBlock != null) {
             damageBlock.setX(x);
             damageBlock.setY(y);
@@ -267,16 +265,16 @@ public class Block extends Entity {
     }
 
     @Override
-    public void draw(Graphics2D g, GameContainer gc) {
+    public void draw(GameCore gc, Graphics g) {
         //super.draw(g, gc);
         if (damageBlock != null) {
             if (damage < damageTreshold) {
-                this.damageBlock.draw(g, gc);
+                this.damageBlock.draw(gc, g);
             }
         }
         if (colored) {
             g.setColor(color);
-            g.fillRect((int) super.x, (int) super.y, 32, 32);
+            g.fillRectangle((int) super.x, (int) super.y, 32, 32);
         }
     }
 

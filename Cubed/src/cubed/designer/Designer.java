@@ -1,8 +1,11 @@
 package cubed.designer;
 
-import java.awt.Color;
+import Core.BaseState;
+import Core.Color;
+import Core.GameCore;
+import Core.Graphics;
+import Core.InputManager;
 import java.awt.Font;
-import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.event.KeyEvent;
 import java.io.BufferedWriter;
@@ -13,9 +16,6 @@ import java.text.DateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 
-import srengine.BaseState;
-import srengine.GameContainer;
-import srengine.InputManager;
 import srengine.utils.Serialiser;
 import cubed.Block;
 import cubed.Config;
@@ -66,34 +66,34 @@ public class Designer extends BaseState{
 		flyingblock = new Block(menu.clickedBlock()[1].split(","), menu.getSerialiser(), menu.clickedBlock()[2].split(","));
 		tb.setBackgroundColor(new Color(0, 50, 0, 150));
 		cameraOn(null, AREAX, AREAY);
-		camera.move(AREAX/2, AREAY/2);
+		cameraMove(AREAX/2, AREAY/2);
 	}
 	
 	@Override
-	protected void draw(Graphics2D g, GameContainer gc) {
-		super.draw(g, gc);
+	protected void draw(GameCore gc, Graphics g) {
+		super.draw(gc, g);
 		if(grid){
 			g.setColor(Color.DARK_GRAY);
 			for(int i=0; i<AREAX;i+=BLOCKSIZE){
-				g.drawLine(i+(int)camera.getXMove(), 0, i+(int)camera.getXMove(), gc.getWindow().getHeight());
+				g.drawLine(i+(int)getCamera().getXMove(), 0, i+(int)getCamera().getXMove(), gc.getHeight());
 			}
 			for(int i=0; i<AREAY;i+=BLOCKSIZE){
-				g.drawLine(0, i+(int)camera.getYMove(), gc.getWindow().getWidth(), i+(int)camera.getYMove());
+				g.drawLine(0, i+(int)getCamera().getYMove(), gc.getWidth(), i+(int)getCamera().getYMove());
 			}
 		}
-		tb.draw(g, gc);
-		overlay.draw(g, gc); 
-		flyingblock.staticRotate(rot);
-		flyingblock.draw(g, gc);
+		tb.draw(gc, g);
+		overlay.draw(gc, g); 
+//		flyingblock.staticRotate(rot);
+		flyingblock.draw(gc, g);
 	}
 	
 	@Override
-	protected void update(InputManager input, GameContainer gc) {
-		super.update(input, gc);
-		overlay.update(input, gc);
-		tb.update(input, gc);
-		if(input.isLMB()&&!menuActive){
-			Point point = getRelPoint(input.getPos());	
+	protected void update(GameCore gc, InputManager input, int delta) {
+		super.update(gc, input, delta);
+		overlay.update(gc, input, delta);
+		tb.update(gc, input, delta);
+		if(input.isLMBClicked()&&!menuActive){
+			Point point = getRelPoint(input.getMousePos());	
 			if(free(point)){
 				flyingblock = new Block(menu.clickedBlock()[1].split(","), menu.getSerialiser(), menu.clickedBlock()[2].split(","));
 				Block ent = new Block(menu.clickedBlock()[1].split(","), menu.getSerialiser(), menu.clickedBlock()[2].split(","));
@@ -101,38 +101,38 @@ public class Designer extends BaseState{
 				ent.setX(point.x*BLOCKSIZE);
 				ent.setY(point.y*BLOCKSIZE);
 				ent.setRelative(point.x, point.y);
-				ent.staticRotate(rot);  
+//				ent.staticRotate(rot);  
 				super.add(ent);
 				setIndex((int)ent.getX(), (int)ent.getY());
 			}
 			
 		}
-		if(input.isRMB()&&!menuActive){
-			Point point = getRelPoint(input.getPos());
+		if(input.isRMBClicked()&&!menuActive){
+			Point point = getRelPoint(input.getMousePos());
 			super.remove(pullOut(point));
 		}
-		if(input.isKeyTyped(KeyEvent.VK_E)&&!textActive){
+		if(input.isKeyTyped(InputManager.KEY_E)&&!textActive){
 			menuActive=!menuActive;
 			overlay.showHide();
 		}
 		if(menuActive){
-			menu.scroll(input.getRotDirection());
+//			menu.scroll(input.getRotDirection());
 		}
-		if(input.isKeyTyped(KeyEvent.VK_G)&&!menuActive&&!textActive){
+		if(input.isKeyTyped(InputManager.KEY_G)&&!menuActive&&!textActive){
 			grid = !grid;
 		}
-		if(input.isKeyTyped(KeyEvent.VK_R)&&!menuActive&&!textActive){
+		if(input.isKeyTyped(InputManager.KEY_R)&&!menuActive&&!textActive){
 			rot +=90;
 			if(rot>270){
 				rot = 0;
 			}
 			System.out.println("rot");
 		}
-		if(input.isKeyTyped(KeyEvent.VK_T)&&!menuActive&&input.isKeyTyped(KeyEvent.VK_CONTROL)){
+		if(input.isKeyTyped(InputManager.KEY_T)&&!menuActive&&input.isKeyTyped(InputManager.KEY_CTRL)){
 			tb.showHide();
 			textActive = !textActive;
 		}
-		if(input.isKeyTyped(KeyEvent.VK_S)&&!menuActive&&input.isKeyTyped(KeyEvent.VK_CONTROL)){
+		if(input.isKeyTyped(InputManager.KEY_S)&&!menuActive&&input.isKeyTyped(InputManager.KEY_CTRL)){
 			tb.setPrompt("Ship name: ");
 			tb.showHide();
 			textActive = !textActive;
@@ -157,24 +157,24 @@ public class Designer extends BaseState{
 				}
 			}
 		}
-		flyingblock.setX(input.getPosX());
-		flyingblock.setY(input.getPosY());
-		if (input.isKeyPressed(KeyEvent.VK_LEFT)) {
-			camera.move(-2, 0);
+		flyingblock.setX(input.getMouseX());
+		flyingblock.setY(input.getMouseY());
+		if (input.isKeyPressed(InputManager.KEY_LEFT)) {
+			getCamera().move(-2, 0);
 		}
-		if (input.isKeyPressed(KeyEvent.VK_RIGHT)) {
-			camera.move(2, 0);
+		if (input.isKeyPressed(InputManager.KEY_RIGHT)) {
+			getCamera().move(2, 0);
 		}
-		if (input.isKeyPressed(KeyEvent.VK_UP)) {
-			camera.move(0, -2);
+		if (input.isKeyPressed(InputManager.KEY_UP)) {
+			getCamera().move(0, -2);
 		}
-		if (input.isKeyPressed(KeyEvent.VK_DOWN)) {
-			camera.move(0, 2);
+		if (input.isKeyPressed(InputManager.KEY_DOWN)) {
+			getCamera().move(0, 2);
 		}
 	}
 	
 	private boolean free(Point mouse){
-		for(int i=0; i<super.size(); i++){
+		for(int i=0; i<super.objectArraySize(); i++){
 			Block bl = (Block)(super.get(i));
 			if(bl.getRelX()==mouse.x&&bl.getRelY()==mouse.y){
 				if((bl.getLayer()==1&&(flyingblock.getLayer()>=5||flyingblock.getLayer()<=1))||bl.getLayer()>=5||fullSlot(bl))	
@@ -219,7 +219,7 @@ public class Designer extends BaseState{
 	}
 	
 	private Block pullOut(Point mouse){
-		for(int i=super.size()-1; i>=0; i--){
+		for(int i=super.objectArraySize()-1; i>=0; i--){
 			Block bl = (Block)(super.get(i));
 			if(bl.getRelX()==mouse.x&&bl.getRelY()==mouse.y)
 				return bl;
@@ -228,7 +228,7 @@ public class Designer extends BaseState{
 	}
 	
 	private Point getRelPoint(Point mouse){
-		return new Point((int)(mouse.x-getCameraXMove())/BLOCKSIZE, (int)(mouse.y-getCameraYMove())/BLOCKSIZE);
+		return new Point((int)(mouse.x-getCamera().getXMove())/BLOCKSIZE, (int)(mouse.y-getCamera().getYMove())/BLOCKSIZE);
 	}
 	
 	public void returnFromMenu(){

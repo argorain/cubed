@@ -1,19 +1,17 @@
 package cubed.states;
 
-import java.awt.Color;
+import Core.BaseState;
+import Core.Color;
+import Core.GameCore;
+import Core.Graphics;
+import Core.InputManager;
 import java.awt.Font;
 import java.awt.FontFormatException;
-import java.awt.Graphics2D;
-import java.awt.event.KeyEvent;
 import java.io.File;
 import java.io.IOException;
 
 import cubed.Client;
 import cubed.gui.TextBox;
-
-import srengine.BaseState;
-import srengine.GameContainer;
-import srengine.InputManager;
 import srengine.utils.Serialiser;
 
 public class Game extends BaseState {
@@ -49,33 +47,33 @@ public class Game extends BaseState {
     }
 
     @Override
-    protected void draw(Graphics2D g, GameContainer gc) {
-        super.draw(g, gc);
-        terminal.draw(g, gc);
-        g.setColor(Color.black);
+    protected void draw(GameCore gc, Graphics g) {
+        super.draw(gc, g);
+        terminal.draw(gc, g);
+        g.setColor(Color.BLACK);
     }
 
     @Override
-    protected void update(InputManager input, GameContainer gc) {
-        super.update(input, gc);
-        terminal.update(input, gc);
-        if (input.event) {
-            if (input.isKeyTyped(KeyEvent.VK_T) && input.isKeyTyped(KeyEvent.VK_CONTROL)) {
+    protected void update(GameCore gc, InputManager input, int delta) {
+        super.update(gc, input, delta);
+        terminal.update(gc, input, delta);
+//        if (input.event) {
+            if (input.isKeyTyped(InputManager.KEY_T )&& input.isKeyTyped(InputManager.KEY_CTRL)) {
                 terminal.showHide();
             }
-            if (input.isKeyPressed(KeyEvent.VK_LEFT)) {
-                camera.move(-2, 0);
+            if (input.isKeyPressed(InputManager.KEY_LEFT)) {
+                getCamera().move(-2, 0);
             }
-            if (input.isKeyPressed(KeyEvent.VK_RIGHT)) {
-                camera.move(2, 0);
+            if (input.isKeyPressed(InputManager.KEY_RIGHT)) {
+                getCamera().move(2, 0);
             }
-            if (input.isKeyPressed(KeyEvent.VK_UP)) {
-                camera.move(0, -2);
+            if (input.isKeyPressed(InputManager.KEY_UP)) {
+                getCamera().move(0, -2);
             }
-            if (input.isKeyPressed(KeyEvent.VK_DOWN)) {
-                camera.move(0, 2);
+            if (input.isKeyPressed(InputManager.KEY_DOWN)) {
+                getCamera().move(0, 2);
             }
-            input.resetEvent();
-        }
+//            input.resetEvent();
+//        }
     }
 }

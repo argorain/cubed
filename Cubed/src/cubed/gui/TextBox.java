@@ -1,18 +1,15 @@
 package cubed.gui;
 
-import java.awt.Color;
+import Core.Color;
+import Core.GameCore;
+import Core.Graphics;
+import Core.InputManager;
+import Core.SREObject;
 import java.awt.Font;
 import java.awt.FontFormatException;
 import java.awt.Graphics2D;
-import java.awt.event.KeyEvent;
-import java.io.File;
-import java.io.IOException;
 
 import javax.management.MXBean;
-
-import srengine.GameContainer;
-import srengine.InputManager;
-import srengine.SREObject;
 
 public abstract class TextBox extends SREObject {
 
@@ -41,17 +38,19 @@ public abstract class TextBox extends SREObject {
     }
 
     @Override
-    public void draw(Graphics2D g, GameContainer gc) {
+    public void draw(GameCore gc, Graphics g) {
         if (show) {
             String prompt = "Terminal# ";
             if (f != null) {
-                g.setFont(f);
+//                g.setFont(f);
             }
             g.setColor(Color.YELLOW);
-            g.drawChars((prompt + inputText + CURSOR).toCharArray(), 0, inputText.length() + prompt.length() + cursorBlink, (int) x + 10, (int) y);
+//            g.drawChars((prompt + inputText + CURSOR).toCharArray(), 0, inputText.length() + prompt.length() + cursorBlink, (int) x + 10, (int) y);
+            g.drawString((prompt + inputText + CURSOR), (int) (x + 10),(int) y);
             for (int i = 0; i < MAX_LINES; i++) {
                 if (text[i] != null) {
-                    g.drawChars(text[i].toCharArray(), 0, text[i].length(), (int) x + 10, (int) y + LINE * i + LINE);
+//                    g.drawChars(text[i].toCharArray(), 0, text[i].length(), (int) x + 10, (int) y + LINE * i + LINE);
+                    g.drawString(text[i], (int) x + 10, (int) y + LINE * i + LINE);
                 }
             }
             if (counter > cursorBlinkTime) {
@@ -63,7 +62,7 @@ public abstract class TextBox extends SREObject {
     }
 
     @Override
-    public void update(InputManager input, GameContainer gc) {
+    public void update(GameCore gc, InputManager input, int delta) {
         if (show) {
             getHits(input);
         }
@@ -84,28 +83,30 @@ public abstract class TextBox extends SREObject {
 
     public void getHits(InputManager input) {
         if (show) {
-            input.listenKeys = true;
-            if (input.isKeyTyped(KeyEvent.VK_BACK_SPACE)) {
-                if(input.typed.length()>1)
-                    input.typed = input.typed.substring(0, input.typed.length() - 2);
-                else
-                    input.typed = ""
-                            ;
+            input.setListenKeys(true);
+            if (input.isKeyTyped(InputManager.KEY_BACKSPACE)) {
+                if (input.getTyped().length() > 1) {
+                    input.setTyped(input.getTyped().substring(0, input.getTyped().length() - 2));
+                } else {
+                    input.setTyped("");
+                }
+                ;
             }
             if (inputText.length() < MAX_CHARS) {
-                if (input.typed.length() > 0) {
-                    if ((input.typed.charAt(input.typed.length() - 1) >= 32) && (input.typed.charAt(input.typed.length() - 1) <= 126)) {
-                        inputText = linePrompt + input.typed;
+                if (input.getTyped().length() > 0) {
+                    if ((input.getTyped().charAt(input.getTyped().length() - 1) >= 32) && (input.getTyped().charAt(input.getTyped().length() - 1) <= 126)) {
+                        inputText = linePrompt + input.getTyped();
                     }
-                }else{
+                } else {
                     inputText = linePrompt;
                 }
             }
-            if (input.isKeyTyped(KeyEvent.VK_ENTER)&&inputText.length()>0) {
+//            System.out.println(inputText.length());
+            if (input.isKeyTyped(InputManager.KEY_ENTER) && inputText.length() > 0) {
                 addText(inputText);
                 enterEvent(inputText);
                 inputText = "";
-                input.typed = "";
+                input.setTyped("");
             }
 
         }

@@ -1,11 +1,11 @@
 package cubed.designer;
 
-import java.awt.Color;
-import java.awt.Graphics2D;
+import Core.Color;
+import Core.GameCore;
+import Core.Graphics;
+import Core.InputManager;
+import Core.SREObject;
 
-import srengine.GameContainer;
-import srengine.InputManager;
-import srengine.SREObject;
 
 public class Overlay extends SREObject{
 	boolean show = false;
@@ -18,18 +18,18 @@ public class Overlay extends SREObject{
 	}
 	
 	@Override
-	public void draw(Graphics2D g, GameContainer gc) {
+	public void draw(GameCore gc, Graphics g) {
 		if(show){
 			g.setColor(new Color(0, 0, 0, 180));
-			g.fillRect(0, 0, gc.getWindow().getWidth(), gc.getWindow().getHeight());
-			component.setPosition(gc.getWindow().getWidth()/2-component.width/2, gc.getWindow().getHeight()/2-component.height/2);
-			component.draw(g, gc);
+			g.fillRectangle(0, 0, gc.getWidth(), gc.getHeight());
+			component.setPosition(gc.getWidth()/2-component.width/2, gc.getHeight()/2-component.height/2);
+			component.draw(gc, g);
 		}
 	}
 
 	@Override
-	public void update(InputManager input, GameContainer gc) {
-		component.update(input, gc);
+	public void update(GameCore gc, InputManager input, int delta) {
+		component.update(gc, input, delta);
 		if(component.hidden&&show){
 			hide();
 			state.returnFromMenu();

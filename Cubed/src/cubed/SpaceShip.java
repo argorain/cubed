@@ -1,24 +1,22 @@
 package cubed;
 
-import java.awt.Color;
-import java.awt.Graphics;
-import java.awt.Graphics2D;
+import Core.Color;
+import Core.Entity;
+import Core.GameCore;
+import Core.Graphics;
+import Core.IHitBox;
+import Core.InputManager;
+import Core.Rectangle;
+import Core.SREObject;
 import java.awt.Point;
-import java.awt.event.KeyEvent;
-import java.awt.geom.AffineTransform;
-import java.awt.image.BufferedImage;
+//import java.awt.geom.AffineTransform;
+//import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.util.ArrayList;
-
-import srengine.Entity;
-import srengine.GameContainer;
-import srengine.IHitBox;
-import srengine.InputManager;
-import srengine.Rectangle;
-import srengine.SREObject;
 import srengine.utils.Serialiser;
 import srengine.utils.SortedList;
+
 
 public class SpaceShip extends SREObject {
 
@@ -218,16 +216,21 @@ public class SpaceShip extends SREObject {
 //    }
     //NEW TESTED VERSION
     @Override
-    public void draw(Graphics2D g, GameContainer gc) {
+    public void draw(GameCore gc, Graphics g) {
 
-        BufferedImage shipGraphBuffer = new BufferedImage((getMaxRelX() + 2) * BLOCKSIZE, (getMaxRelY() + 2) * BLOCKSIZE, BufferedImage.TYPE_INT_RGB);
-        Graphics shipGraph = shipGraphBuffer.getGraphics();
-        AffineTransform transformace = new AffineTransform();
+//        BufferedImage shipGraphBuffer = new BufferedImage((getMaxRelX() + 2) * BLOCKSIZE, (getMaxRelY() + 2) * BLOCKSIZE, BufferedImage.TYPE_INT_RGB);
+//        Graphics shipGraph = shipGraphBuffer.getGraphics();
+//        AffineTransform transformace = new AffineTransform();
 
+        g.saveTransform();
+        g.translate(x-centerOfGravity.x, y-centerOfGravity.y);
+        g.rotate(angle);
+        
         for (int i = 0; i < blocks.size(); i++) {
             Block block = blocks.get(i);
             if (block != null && !block.hidden()) {
-                shipGraph.drawImage(block.getImage(), block.getRelX() * BLOCKSIZE, block.getRelY() * BLOCKSIZE, null);
+//                shipGraph.drawImage(block.getImage(), block.getRelX() * BLOCKSIZE, block.getRelY() * BLOCKSIZE, null);
+                g.drawImage(block.getImage(), block.getRelX() * BLOCKSIZE, block.getRelY() * BLOCKSIZE);
 
             }
         }
@@ -237,36 +240,41 @@ public class SpaceShip extends SREObject {
          */
         for (int i = 0; i < men.size(); i++) {
             if (!men.get(i).hidden()) {
-                shipGraph.drawImage(men.get(i).getImage(), (int) men.get(i).getX(), (int) men.get(i).getY() - 8, null);
+//                shipGraph.drawImage(men.get(i).getImage(), (int) men.get(i).getX(), (int) men.get(i).getY() - 8, null);
+                g.drawImage(men.get(i).getImage(), (int) men.get(i).getX(), (int) men.get(i).getY() - 8);
             }
 
-            shipGraph.setColor(Color.red);
-            shipGraph.drawLine(men.get(i).trelX * BLOCKSIZE + BLOCKSIZE / 2, men.get(i).trelY * BLOCKSIZE + BLOCKSIZE / 2, men.get(i).relX * BLOCKSIZE + BLOCKSIZE / 2, men.get(i).relY * BLOCKSIZE + BLOCKSIZE / 2);
+//            shipGraph.setColor(Color.red);
+            g.setColor(Color.RED);
+//            shipGraph.drawLine(men.get(i).trelX * BLOCKSIZE + BLOCKSIZE / 2, men.get(i).trelY * BLOCKSIZE + BLOCKSIZE / 2, men.get(i).relX * BLOCKSIZE + BLOCKSIZE / 2, men.get(i).relY * BLOCKSIZE + BLOCKSIZE / 2);
+            g.drawLine(men.get(i).trelX * BLOCKSIZE + BLOCKSIZE / 2, men.get(i).trelY * BLOCKSIZE + BLOCKSIZE / 2, men.get(i).relX * BLOCKSIZE + BLOCKSIZE / 2, men.get(i).relY * BLOCKSIZE + BLOCKSIZE / 2);
         }
         /**
          * over
          */
         float moveX = 0;
         float moveY = 0;
+        
+        g.resetTransform();
 
-        if (camera != null) {
-            moveX = camera.getXMove();
-            moveY = camera.getYMove();
-        }
+//        if (camera != null) {
+//            moveX = camera.getXMove();
+//            moveY = camera.getYMove();
+//        }
 
-        transformace.translate(this.x + moveX, this.y + moveY);
-        transformace.rotate(this.angle);
-        transformace.translate(-centerOfGravity.x, -centerOfGravity.y);
+//        transformace.translate(this.x + moveX, this.y + moveY);
+//        transformace.rotate(this.angle);
+//        transformace.translate(-centerOfGravity.x, -centerOfGravity.y);
+//
+//        g.drawImage(shipGraphBuffer, transformace, null);
 
-        g.drawImage(shipGraphBuffer, transformace, null);
-
-        for (int i = 0; i < blocks.size(); i++) {
-            Block block = blocks.get(i);
-            block.draw(g, gc);
+//        for (int i = 0; i < blocks.size(); i++) {
+//            Block block = blocks.get(i);
+//            block.draw(gc, g);
             //for show hitbox
 //                g.setColor(Color.yellow);
 //                block.getHitBox().draw(g, gc);
-        }
+//        }
 
         /*for (int i = 0; i < entities.size(); i++) {
          entities.get(i).draw(g, gc);
@@ -274,7 +282,7 @@ public class SpaceShip extends SREObject {
     }
 
     @Override
-    public void update(InputManager input, GameContainer gc) {
+    public void update(GameCore gc, InputManager input, int delta) {
         float moveX = centerOfGravity.x;
         float moveY = centerOfGravity.y;
 
@@ -285,7 +293,7 @@ public class SpaceShip extends SREObject {
                 double newY = (block.getRelX() * BLOCKSIZE - moveX) * Math.sin(angle) + (block.getRelY() * BLOCKSIZE - moveY) * Math.cos(angle);
                 block.setX((float) newX + x);
                 block.setY((float) newY + y);
-                block.setAngle(angle);
+//                block.setAngle(angle);
 //            	block.setX(x+i*32);
 //            	block.setY(y+j*32);
                 if (block.clickedLMB()) {
@@ -305,7 +313,7 @@ public class SpaceShip extends SREObject {
                  block.uncolor();
                  }*/
                 ////
-                block.update(input, gc);
+                block.update(gc, input, delta);
             }
         }
 

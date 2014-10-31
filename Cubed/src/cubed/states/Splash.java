@@ -1,17 +1,17 @@
 package cubed.states;
 
-import java.awt.Color;
-import java.awt.Graphics2D;
-import java.awt.Image;
+import Core.BaseState;
+import Core.Color;
+import Core.GameCore;
+import Core.Graphics;
+import Core.Image;
+import Core.InputManager;
 import java.io.IOException;
 import java.util.Timer;
 import java.util.TimerTask;
 
 import javax.imageio.ImageIO;
 
-import srengine.BaseState;
-import srengine.GameContainer;
-import srengine.InputManager;
 import srengine.utils.Serialiser;
 
 public class Splash extends BaseState {
@@ -48,7 +48,7 @@ public class Splash extends BaseState {
     protected void init() {
         super.init();
         try {
-            logo = ImageIO.read(s.getData(shows[0]));
+            logo = Image.read(s.getData(shows[0]));
         } catch (IOException e) {
             System.err.print("Error during loading " + shows[0] + " logo.\n" + e.getCause());
         }
@@ -65,17 +65,17 @@ public class Splash extends BaseState {
     }
 
     @Override
-    protected void draw(Graphics2D g, GameContainer gc) {
-        super.draw(g, gc);
+    protected void draw(GameCore gc, Graphics g) {
+        super.draw(gc, g);
         shade = new Color(0, 0, 0, alpha);
-        g.drawImage(logo, gc.getWindow().getWidth() / 2 - logo.getWidth(null) / 2, gc.getWindow().getHeight() / 2 - logo.getHeight(null) / 2, null);
+        g.drawImage(logo, gc.getWidth() / 2 - logo.getWidth() / 2, gc.getHeight() / 2 - logo.getHeight() / 2);
         g.setColor(shade);
-        g.fillRect(0, 0, gc.getWindow().getWidth(), gc.getWindow().getHeight());
+        g.fillRectangle(0, 0, gc.getWidth(), gc.getHeight());
     }
 
     @Override
-    protected void update(InputManager input, GameContainer gc) {
-        super.update(input, gc);
+    protected void update(GameCore gc, InputManager input, int delta) {
+        super.update(gc, input, delta);
         time++;
         switch (phase) {
             case 0: //rise			
@@ -107,7 +107,7 @@ public class Splash extends BaseState {
                     show++;
                     if (show < shows.length) {
                         try {
-                            logo = ImageIO.read(s.getData(shows[show]));
+                            logo = Image.read(s.getData(shows[show]));
                         } catch (IOException e) {
                             System.err.print("Error during loading " + shows[show] + " logo.\n" + e.getCause());
                         }

@@ -1,22 +1,21 @@
 package cubed.states;
 
-import java.awt.Color;
+import Core.BaseState;
+import Core.Color;
+import Core.Entity;
+import Core.GameCore;
+import Core.Graphics;
+import Core.IHitBox;
+import Core.InputManager;
+import Core.Rectangle;
 import java.awt.Font;
 import java.awt.FontFormatException;
-import java.awt.Graphics2D;
-import java.awt.event.KeyEvent;
 import java.io.File;
 import java.io.IOException;
 
 import cubed.Block;
 import cubed.SpaceShip;
 
-import srengine.BaseState;
-import srengine.Entity;
-import srengine.GameContainer;
-import srengine.IHitBox;
-import srengine.InputManager;
-import srengine.Rectangle;
 import srengine.utils.Serialiser;
 
 public class TestWorldSit extends BaseState {
@@ -74,9 +73,9 @@ public class TestWorldSit extends BaseState {
         ship.fill("gravityTest.ship", ships, s, cfgSer);
         
         sprite.setHitBox(new Rectangle(20,30));
-        sprite.setHitboxAlign(IHitBox.ALIGN_LEFT);
-        sprite.setHitboxValign(IHitBox.VALIGN_BOTTOM);
-        sprite.setClickBox(new Rectangle(32, 40));
+//        sprite.setHitboxAlign(IHitBox.ALIGN_LEFT);
+//        sprite.setHitboxValign(IHitBox.VALIGN_BOTTOM);
+//        sprite.setClickBox(new Rectangle(32, 40));
         add(9, sprite);
 
 //		add(0, brick11);
@@ -110,17 +109,17 @@ public class TestWorldSit extends BaseState {
     }
     
     @Override
-    protected void draw(Graphics2D g, GameContainer gc) {
-        super.draw(g, gc);
-        g.setColor(Color.black);
-        g.setFont(f);
-        g.drawChars("Font".toCharArray(), 0, 4, 50, 450);
+    protected void draw(GameCore gc, Graphics g) {
+        super.draw(gc, g);
+        g.setColor(Color.BLACK);
+//        g.setFont(f);
+//        g.drawChars("Font".toCharArray(), 0, 4, 50, 450);
 //                dmg1.draw(g, gc);
     }
 
     @Override
-    protected void update(InputManager input, GameContainer gc) {
-    	super.update(input, gc);
+    protected void update(GameCore gc, InputManager input, int delta) {
+    	super.update(gc, input, delta);
 
     	/*if(sprite.isPointInside(input.getPosX(), input.getPosY()))
         	System.out.println("mouse");
@@ -135,55 +134,55 @@ public class TestWorldSit extends BaseState {
     	//        	System.out.println("not collide");
     	//        }
 
-    	if(input.event){
-    		loader.blockAction(input.getPosX(), input.getPosY(), input.MBPressed());
+//    	if(input.event){
+    		loader.blockAction(input.getMouseX(), input.getMouseY(), input.MBPressed());
 
-    		if (input.isKeyPressed(KeyEvent.VK_A)) {
+    		if (input.isKeyPressed(InputManager.KEY_A)) {
     			//			sprite.setX(sprite.getX() - 2f);
     			ship.setX(ship.getX() - 2f);
     		}
-    		if (input.isKeyPressed(KeyEvent.VK_D)) {
+    		if (input.isKeyPressed(InputManager.KEY_D)) {
     			//			sprite.setX(sprite.getX() + 2f);
     			ship.setX(ship.getX() + 2f);
     		}
-    		if (input.isKeyPressed(KeyEvent.VK_W)) {
+    		if (input.isKeyPressed(InputManager.KEY_W)) {
     			//			sprite.setY(sprite.getY() - 2f);
     			ship.setY(ship.getY() - 2f);
     		}
-    		if (input.isKeyPressed(KeyEvent.VK_S)) {
+    		if (input.isKeyPressed(InputManager.KEY_S)) {
     			//			sprite.setY(sprite.getY() + 2f);
     			ship.setY(ship.getY() + 2f);
     		}
 
-    		if (input.isKeyPressed(KeyEvent.VK_LEFT)) {
+    		if (input.isKeyPressed(InputManager.KEY_LEFT)) {
     			//			sprite.setX(sprite.getX() - 2f);
     			spaceShip.setX(spaceShip.getX() - 2f);
     		}
-    		if (input.isKeyPressed(KeyEvent.VK_RIGHT)) {
+    		if (input.isKeyPressed(InputManager.KEY_RIGHT)) {
     			//			sprite.setX(sprite.getX() + 2f);
     			spaceShip.setX(spaceShip.getX() + 2f);
     		}
-    		if (input.isKeyPressed(KeyEvent.VK_UP)) {
+    		if (input.isKeyPressed(InputManager.KEY_UP)) {
     			//			sprite.setY(sprite.getY() - 2f);
     			spaceShip.setY(spaceShip.getY() - 2f);
     		}
-    		if (input.isKeyPressed(KeyEvent.VK_DOWN)) {
+    		if (input.isKeyPressed(InputManager.KEY_DOWN)) {
     			//			sprite.setY(sprite.getY() + 2f);
     			spaceShip.setY(spaceShip.getY() + 2f);
     		}
-    		if (input.isKeyTyped(KeyEvent.VK_N)) {
+    		if (input.isKeyTyped(InputManager.KEY_N)) {
     			brick11.injure(10);
     			brick33.injure(30);
     			System.out.println(brick11.getDamage());
     			//			dmg2.redraw();
     		}
 
-    		if (input.isKeyTyped(KeyEvent.VK_Q)) {
+    		if (input.isKeyTyped(InputManager.KEY_Q)) {
     			spaceShip.setAngle(spaceShip.getAngle() + 0.1f);
     			ship.setAngle(ship.getAngle() + 0.1f);
     			sprite.setAngle(sprite.getAngle() + 0.1f);
     		}
-    		if (input.isKeyTyped(KeyEvent.VK_E)) {
+    		if (input.isKeyTyped(InputManager.KEY_E)) {
     			spaceShip.setAngle(spaceShip.getAngle() - 0.1f);
     			ship.setAngle(ship.getAngle() - 0.1f);
     			sprite.setAngle(sprite.getAngle() - 0.1f);
@@ -199,7 +198,7 @@ public class TestWorldSit extends BaseState {
     		//loader.setY(input.getPosY());
     		loader.setAngle(loader.getAngle()+(float)(input.getRotDirection()/10.0));
 
-    		input.resetEvent();
-    	}
+//    		input.resetEvent();
+//    	}
     }
 }

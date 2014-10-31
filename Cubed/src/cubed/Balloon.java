@@ -1,12 +1,12 @@
 package cubed;
 
-import java.awt.Color;
+import Core.Color;
+import Core.Entity;
+import Core.GameCore;
+import Core.Graphics;
 import java.awt.Font;
-import java.awt.Graphics2D;
 import java.io.File;
 
-import srengine.Entity;
-import srengine.GameContainer;
 import srengine.utils.Serialiser;
 
 public class Balloon extends Entity{
@@ -44,16 +44,16 @@ public class Balloon extends Entity{
 	}
 	
 	@Override
-	public void draw(Graphics2D g, GameContainer gc) {
-        super.draw(g, gc);
+	public void draw(GameCore gc, Graphics g) {
+        super.draw(gc, g);
         g.setColor(Color.BLACK);
-        g.setFont(f);
+//        g.setFont(f);
         for(int i=0; i<text.length-1; i++){
-        	g.drawChars(text[i], 0, 12, (int)x+bx, (int)y+by+i*18);
+//        	g.drawChars(text[i], 0, 12, (int)x+bx, (int)y+by+i*18);
         }
         g.setColor(Color.WHITE);
         for(int i=0; i<text.length-1; i++){
-        	g.drawChars(text[i], 0, 12, (int)x+bx-1, (int)y+by-1+i*18);
+//        	g.drawChars(text[i], 0, 12, (int)x+bx-1, (int)y+by-1+i*18);
         }
     }
 

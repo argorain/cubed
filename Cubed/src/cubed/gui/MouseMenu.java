@@ -1,14 +1,12 @@
 package cubed.gui;
 
-import java.awt.Color;
-import java.awt.Graphics2D;
-import java.awt.Image;
+import Core.Color;
+import Core.GameCore;
+import Core.Graphics;
+import Core.Image;
+import Core.InputManager;
+import Core.SREObject;
 
-import javax.imageio.ImageIO;
-
-import srengine.GameContainer;
-import srengine.InputManager;
-import srengine.SREObject;
 import srengine.utils.Serialiser;
 
 public class MouseMenu extends SREObject {
@@ -23,7 +21,7 @@ public class MouseMenu extends SREObject {
 	
 	public MouseMenu(String image, Serialiser s, int buttons) {
 		try {
-			this.image=ImageIO.read(s.getData(image));
+			this.image=Image.read(s.getData(image));
 		} catch (Exception ex) {
 			System.err.println("Cannot load MouseMenu image resource.\n"+ex.getCause());
 		}
@@ -31,9 +29,9 @@ public class MouseMenu extends SREObject {
 	}
 	
 	@Override
-	public void draw(Graphics2D g, GameContainer gc) {
+	public void draw(GameCore gc, Graphics g) {
 		if(show){
-			g.drawImage(image, (int)x-size/2, (int)y-size/2, null);
+			g.drawImage(image, (int)x-size/2, (int)y-size/2);
 			/*g.setColor(Color.red);
 			g.drawArc((int)x-size/2, (int)y-size/2, size, size, 0, 360);
 			g.drawArc((int)(x-(size*dimRatio)/2), (int)(y-(size*dimRatio)/2), (int)(size*dimRatio), (int)(size*dimRatio), 0, 360);
@@ -44,14 +42,14 @@ public class MouseMenu extends SREObject {
 						(int)(x+Math.cos(i*(Math.PI*2)/parts)*size/2), 
 						(int)(y+Math.sin(i*(Math.PI*2)/parts)*size/2));
 			}*/
-			g.setColor(Color.orange);
+			g.setColor(Color.ORANGE);
 			g.drawLine((int)x, (int)y, px, py);
 		}
 	}
 
 	@Override
-	public void update(InputManager input, GameContainer gc) {
-		if(input.isRMB()){
+	public void update(GameCore gc, InputManager input, int delta) {
+		if(input.isRMBClicked()){
 			if(show){
 				double dy=y-py, dx=x-px;
 				double angle = Math.toDegrees(Math.atan((dx)/(dy)))+90;
@@ -64,13 +62,13 @@ public class MouseMenu extends SREObject {
 					event = true;
 				}
 			}
-			x=input.getPosX();
-			y=input.getPosY();
+			x=input.getMouseX();
+			y=input.getMouseY();
 			showHide();
 		}
 		if(show){
-			px=input.getPosX();
-			py=input.getPosY();
+			px=input.getMouseX();
+			py=input.getMouseY();
 		}
 	}
 

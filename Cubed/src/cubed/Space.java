@@ -1,13 +1,12 @@
 package cubed;
 
-import java.awt.Color;
-import java.awt.Graphics2D;
-import java.awt.event.KeyEvent;
+import Core.BaseState;
+import Core.Color;
+import Core.Entity;
+import Core.GameCore;
+import Core.Graphics;
+import Core.InputManager;
 
-import srengine.BaseState;
-import srengine.Entity;
-import srengine.GameContainer;
-import srengine.InputManager;
 
 public class Space extends BaseState {
 
@@ -25,24 +24,24 @@ public class Space extends BaseState {
 	}
 
 	@Override
-	protected void draw(Graphics2D g, GameContainer gc) {
-		super.draw(g, gc);
-		g.setColor(Color.black);
+	protected void draw(GameCore gc, Graphics g) {
+		super.draw(gc, g);
+		g.setColor(Color.BLACK);
 	}
 
 	@Override
-	protected void update(InputManager input, GameContainer gc) {
-		super.update(input, gc);
-		if (input.isKeyPressed(KeyEvent.VK_LEFT)) {
+	protected void update(GameCore gc, InputManager input, int delta) {
+		super.update(gc, input, delta);
+		if (input.isKeyPressed(InputManager.KEY_LEFT)) {
 			sprite.setX(sprite.getX() - 2f);
 		}
-		if (input.isKeyPressed(KeyEvent.VK_RIGHT)) {
+		if (input.isKeyPressed(InputManager.KEY_RIGHT)) {
 			sprite.setX(sprite.getX() + 2f);
 		}
-		if (input.isKeyPressed(KeyEvent.VK_UP)) {
+		if (input.isKeyPressed(InputManager.KEY_UP)) {
 			sprite.setY(sprite.getY() - 2f);
 		}
-		if (input.isKeyPressed(KeyEvent.VK_DOWN)) {
+		if (input.isKeyPressed(InputManager.KEY_DOWN)) {
 			sprite.setY(sprite.getY() + 2f);
 		}
 	}
