@@ -160,16 +160,16 @@ public class Designer extends BaseState{
 		flyingblock.setX(input.getMouseX());
 		flyingblock.setY(input.getMouseY());
 		if (input.isKeyPressed(InputManager.KEY_LEFT)) {
-			getCamera().move(-2, 0);
+			getCamera().move(-0.3f*delta, 0);
 		}
 		if (input.isKeyPressed(InputManager.KEY_RIGHT)) {
-			getCamera().move(2, 0);
+			getCamera().move(0.3f*delta, 0);
 		}
 		if (input.isKeyPressed(InputManager.KEY_UP)) {
-			getCamera().move(0, -2);
+			getCamera().move(0, -0.3f*delta);
 		}
 		if (input.isKeyPressed(InputManager.KEY_DOWN)) {
-			getCamera().move(0, 2);
+			getCamera().move(0, 0.3f*delta);
 		}
 	}
 	

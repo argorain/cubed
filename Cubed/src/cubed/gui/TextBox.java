@@ -42,15 +42,15 @@ public abstract class TextBox extends SREObject {
         if (show) {
             String prompt = "Terminal# ";
             if (f != null) {
-//                g.setFont(f);
+                g.setFont(f);
             }
             g.setColor(Color.YELLOW);
-//            g.drawChars((prompt + inputText + CURSOR).toCharArray(), 0, inputText.length() + prompt.length() + cursorBlink, (int) x + 10, (int) y);
-            g.drawString((prompt + inputText + CURSOR), (int) (x + 10),(int) y);
+            g.drawChars((prompt + inputText + CURSOR).toCharArray(), 0, inputText.length() + prompt.length() + cursorBlink, (int) x + 10, (int) y);
+//            g.drawString((prompt + inputText + CURSOR), (int) (x + 10),(int) y);
             for (int i = 0; i < MAX_LINES; i++) {
                 if (text[i] != null) {
-//                    g.drawChars(text[i].toCharArray(), 0, text[i].length(), (int) x + 10, (int) y + LINE * i + LINE);
-                    g.drawString(text[i], (int) x + 10, (int) y + LINE * i + LINE);
+                    g.drawChars(text[i].toCharArray(), 0, text[i].length(), (int) x + 10, (int) y + LINE * i + LINE);
+//                    g.drawString(text[i], (int) x + 10, (int) y + LINE * i + LINE);
                 }
             }
             if (counter > cursorBlinkTime) {

@@ -266,7 +266,7 @@ public class Block extends Entity {
 
     @Override
     public void draw(GameCore gc, Graphics g) {
-        //super.draw(g, gc);
+        super.draw(gc, g);
         if (damageBlock != null) {
             if (damage < damageTreshold) {
                 this.damageBlock.draw(gc, g);

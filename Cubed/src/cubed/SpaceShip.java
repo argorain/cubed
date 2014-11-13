@@ -223,8 +223,9 @@ public class SpaceShip extends SREObject {
 //        AffineTransform transformace = new AffineTransform();
 
         g.saveTransform();
-        g.translate(x-centerOfGravity.x, y-centerOfGravity.y);
+        g.translate(x, y);
         g.rotate(angle);
+        g.translate(-centerOfGravity.x, -centerOfGravity.y);
         
         for (int i = 0; i < blocks.size(); i++) {
             Block block = blocks.get(i);

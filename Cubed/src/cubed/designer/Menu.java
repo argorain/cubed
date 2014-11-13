@@ -145,8 +145,10 @@ public class Menu extends SREObject{
 			g.setColor(new Color(92, 210, 72, 140));
 			g.fillRectangle(px, py, 200, 100);
 			g.setColor(new Color(250, 250, 250, 255));
-//			g.drawChars(popBlock.getName().toCharArray(), 0, popBlock.getName().length(), px+10, py+15);
-//			g.drawChars((popBlock.getWeight()+" kg").toCharArray(), 0, (popBlock.getWeight()+" kg").length(), px+10, py+30);
+			g.drawChars(popBlock.getName().toCharArray(), 0, popBlock.getName().length(), px+10, py+15);
+//			g.drawString(popBlock.getName(), px+10, py+15);
+			g.drawChars((popBlock.getWeight()+" kg").toCharArray(), 0, (popBlock.getWeight()+" kg").length(), px+10, py+30);
+//			g.drawString((popBlock.getWeight()+" kg"), px+10, py+30);
 		}
 	}
 	
